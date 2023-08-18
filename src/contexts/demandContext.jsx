@@ -49,7 +49,9 @@ export function DemandProvider({ children }){
 
         try{
 
-            const response = await econoAPI.get(`/pedidos?tipo=${demandType}&data=${demandDate}&pagina=${currentPage}&quantidade=${paginationLimit}&usuario_id=${userSearch}`);
+            setLoading(true);
+
+            const response = await econoAPI.get(`/demands?type=${demandType}&date=${demandDate}&page=${currentPage}&quanty=${paginationLimit}&userId=${userSearch}`);
 
             const { data } = response;
 
@@ -98,6 +100,8 @@ export function DemandProvider({ children }){
             loading,
             demandDate,
             demandType,
+            getDemands,
+            setCurrentPage,
             handleDemandDate,
             handleDemandType
         } }>

@@ -28,6 +28,7 @@ export const DeliveryContainer = styled.section`
 
             background-color: green;
             color:white;
+            border-radius: 5px;
             font-weight: bold;
             padding:20px;
 
@@ -48,10 +49,17 @@ export const DeliveryContainer = styled.section`
 
     .filters{
 
+        
+        padding:30px;
+        box-shadow: 6px 6px 6px 6px grey;
+        border-radius: 10px;
+
         input[type='date']{
 
             width: 350px;
             height: 40px;
+            outline:none;
+            border-radius: 10px;
             font-size: 20px;
             padding-left: 20px;
 
@@ -82,9 +90,9 @@ export const DeliveryContainer = styled.section`
 
     .delivery-item{
 
-        width: 60%;
+        width: 80%;
         background: white;
-        box-shadow: 2px 2px 2px 2px grey;
+        box-shadow: 6px 6px 6px 6px grey;
         padding:20px;
         border-radius: 10px;
 

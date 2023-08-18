@@ -1,7 +1,11 @@
 import * as S from './styles';
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo.png';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
-export default function Header() {
+export default function Header({title}) {
+
+    const Nav = useNavigate();
     
     return (
         <S.HeaderContainer>
@@ -10,7 +14,13 @@ export default function Header() {
 
                 <img width={150} height={150} src={logo}/>
 
-                {/* <h1>ECONOCOMPRAS</h1> */}
+            </div>
+
+            <div className='page-option'>
+
+                <h2>{title}</h2>
+
+                <Button onClick={ () => Nav(-1) }>Voltar</Button>
 
             </div>
 

@@ -1,72 +1,105 @@
 import * as S from './style';
-import BounceLoader from "react-spinners/BounceLoader";
 import { Button } from '@mui/material';
 import emptyIcon from '../../assets/images/empty.png';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { demandContext } from '../../contexts/demandContext';
+import econoAPI from '../../services/econobotAPI';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import { useEffect } from 'react';
+import ButtonSt from '../../components/Button';
 
-const override = {
-    display: "block",
-    margin: "0 auto",
-    borderColor: "red",
-};
-
-export default function Demand(){
+export default function Demand({headerTitle}){
 
     const demandOptions = useContext(demandContext);
+
+    const [ reason, setReason ] = useState('');
+
+    const [ demandRecuse, setDemandRecuse ] = useState(false);
+
+    const [ currentDemandTitle, setCurrentDemandTitle ] = useState('Pedidos recebidos');
+
+    async function changeDemandStatus(demandId,status){
+
+        const promise = econoAPI.patch(`/demands/${demandId}`,{
+            status,
+            motivo:reason
+        });
+
+        await toast.promise(promise,{
+            success:`Pedido ${status} com sucesso !`,
+            error:`Não foi possível ${status} este pedido`,
+            pending:`${status} pedido...`
+        });
+
+        await demandOptions.getDemands();
+
+    }
+
+    function handlePage(event,value){
+
+        demandOptions.setCurrentPage(value);
+
+    }
+
+    useEffect( () => {
+
+        headerTitle.setter('Pedidos');
+
+    },[]);
+
+    function handleDemand(status,demandTitle){
+
+        demandOptions.handleDemandType(status);
+
+        setCurrentDemandTitle(demandTitle);
+
+    }
 
     return (
         <S.DeliveryContainer>
 
+            <div className='filters'>
 
-            <BounceLoader
-                color={'blue'}
-                loading={demandOptions.loading}
-                cssOverride={override}
-                size={120}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-            />
+                <div className='delivery-options'>
+            
+                    <Button onClick={ () => handleDemand('RECEBIDO','Pedidos recebidos') } variant="contained">Feitos</Button>
 
-            { !demandOptions.loading && (
-                <div className='filters'>
+                    <Button onClick={ () => handleDemand('SEPARAÇÃO','Pedidos separados') } variant="contained">Separados</Button>
 
-                    <div className='delivery-options'>
-                
-                        <Button onClick={ () => demandOptions.handleDemandType('RECEBIDO') } variant="contained">Feitos</Button>
+                    <Button onClick={ () => handleDemand('ENTREGA','Pedidos em rota de entrega') } variant="contained">Em rota de entrega</Button>
 
-                        <Button onClick={ () => demandOptions.handleDemandType('CONFIRMADO') } variant="contained">Confirmados</Button>
+                    <Button onClick={ () => handleDemand('FINALIZADO','Pedidos finalizados') } variant="contained">Finalizados</Button>
 
-                        <Button onClick={ () => demandOptions.handleDemandType('REJEITADO') } variant="contained">Rejeitados</Button>
+                    <Button onClick={ () => handleDemand('REJEITADO','Pedidos rejeitados') } variant="contained">Rejeitados</Button>
 
-                        <Button onClick={ () => demandOptions.handleDemandType('FINALIZADO') } variant="contained">Finalizados</Button>
+                    </div>
 
-                     </div>
+                    <br/>
 
-                     <br/>
+                    <div className='date-input'>
 
-                     <div className='date-input'>
-
-                        <label>
-                        
-                                <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
+                    <label>
+                    
+                            <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
 
 
-                        </label>
-
-                     </div>
-
-
+                    </label>
 
                 </div>
-            )}
+
+
+
+            </div>
 
             <div className='demand-handler-container'>
 
                 <div className='demands'>
 
-                    <p id='demand-text'>PEDIDOS {demandOptions.demandType}S</p>
+                    <p id='demand-text'>{currentDemandTitle.toUpperCase()}</p>
 
                     { !demandOptions.loading && demandOptions.demands.length === 0 && (
 
@@ -88,16 +121,52 @@ export default function Demand(){
 
                                 <p><strong>MÉTODO DE PAGAMENTO: {demand.metodo_pagamento}</strong></p>
 
+                               <ButtonSt>
+
                                 <Link target='_blank' to={demand.carrinho_id.toString()}>Visualizar</Link>
+
+                               </ButtonSt>
+
+                                { demandOptions.demandType === 'RECEBIDO' && (
+                                    <>
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'aprovado') }  variant="contained">Aceitar</ButtonSt>
+
+                                        <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">Recusar</ButtonSt>
+
+                                    </>
+                                )}
+
+                                { demandOptions.demandType === 'SEPARAÇÃO' && (
+                                    <>
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'Saiu para entrega') }  variant="contained">Saiu pra entrega</ButtonSt>
+
+                                    </>
+                                )}
+
+                                { demandOptions.demandType === 'ENTREGA' && (
+                                    <>
+
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'finalizado') } variant="contained">Finalizar</ButtonSt>
+
+                                    </>
+                                )}
 
 
                             </div>
                         </>
                     ))}
 
+                     <Stack spacing={2}>
+
+                        <Pagination onChange={handlePage} count={100} variant="outlined" shape="rounded" />
+
+                     </Stack>
+
+
                 </div>
 
             </div>
+
 
         </S.DeliveryContainer>
     )

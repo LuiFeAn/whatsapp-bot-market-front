@@ -8,7 +8,7 @@ export default createGlobalStyle`
         margin:0px;
         overflow-x: hidden;
         font-family: 'Roboto', sans-serif;
-        background:#e6e5e6;
+        background:white;
 
     }
 

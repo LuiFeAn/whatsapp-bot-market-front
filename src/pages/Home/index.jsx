@@ -9,11 +9,18 @@ import Typography from '@mui/material/Typography';
 import delivery from '../../assets/images/delivery.jpg';
 
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-export default function Home() {
+export default function Home({headerTitle}) {
 
 
   const Nav = useNavigate();
+
+  useEffect( () => {
+
+    headerTitle.setter('Página Inicial')
+
+  },[]);
 
   return (
 
