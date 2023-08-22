@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const DeliveryContainer = styled.section`
 
     width:100%;
-    padding-left:150px;
     padding-bottom: 150px;
 
     .demand-empty {
@@ -23,6 +22,8 @@ export const DeliveryContainer = styled.section`
         display: flex;
         padding:30px;
         margin-top:20px;
+        align-items: center;
+        justify-content: center;
 
         #demand-text{
 
@@ -40,6 +41,7 @@ export const DeliveryContainer = styled.section`
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            justify-content: center;
             gap:20px;
 
         }
@@ -50,20 +52,41 @@ export const DeliveryContainer = styled.section`
     .filters{
 
         
-        padding:30px;
+        padding:20px;
         box-shadow: 6px 6px 6px 6px grey;
-        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap:20px;
+
+        span{
+            font-weight: bold;
+        }
+
+        select{
+
+            width: 350px;
+            height: 40px;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
 
         input[type='date']{
 
             width: 350px;
             height: 40px;
+            text-align: center;
             outline:none;
             border-radius: 10px;
             font-size: 20px;
             padding-left: 20px;
 
         }
+        
 
         input{
             width: 250px;

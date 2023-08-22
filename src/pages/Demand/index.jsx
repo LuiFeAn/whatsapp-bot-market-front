@@ -31,7 +31,21 @@ export default function Demand({headerTitle}){
 
         await toast.promise(promise,{
             success:`Pedido ${status} com sucesso !`,
-            error:`Não foi possível ${status} este pedido`,
+            error:{
+                render({data:{response:{data}}}){
+
+                    let errors = '';
+
+                    data.forEach(function(error){
+
+                        errors += '\n' + error.msg;
+
+                    });
+
+                    return errors
+
+                }
+            },
             pending:`${status} pedido...`
         });
 
@@ -59,39 +73,77 @@ export default function Demand({headerTitle}){
 
     }
 
+    function handleSelectInput(event){
+
+        const { target:{ value } } = event;
+
+        if( value === 'FEITOS' ){
+
+           return handleDemand('RECEBIDO','Pedidos recebidos');
+
+        }
+
+        if( value === 'SEPARADOS' ){
+
+            return handleDemand('SEPARAÇÃO','Pedidos separados');
+
+        }
+
+        if( value === 'EM ROTA DE ENTREGA' ){
+
+            return handleDemand('ENTREGA','Pedidos em rota de entrega');
+
+        }
+
+        if( value === 'RECEBÍVEIS' ){
+
+            return handleDemand('RECEBÍVEL','Pedidos recebíveis no estabelecimento');
+
+        }
+
+        if( value === 'FINALIZADOS' ){
+
+            return handleDemand('FINALIZADO','Pedidos finalizados');
+
+        }
+
+        if( value === 'REJEITADOS' ){
+
+            return handleDemand('REJEITADO','Pedidos rejeitados');
+
+        }
+
+
+
+    }
+
     return (
         <S.DeliveryContainer>
 
             <div className='filters'>
 
-                <div className='delivery-options'>
-            
-                    <Button onClick={ () => handleDemand('RECEBIDO','Pedidos recebidos') } variant="contained">Feitos</Button>
 
-                    <Button onClick={ () => handleDemand('SEPARAÇÃO','Pedidos separados') } variant="contained">Separados</Button>
+                <span>Pedidos</span>
 
-                    <Button onClick={ () => handleDemand('ENTREGA','Pedidos em rota de entrega') } variant="contained">Em rota de entrega</Button>
+                <select onChange={handleSelectInput}>
 
-                    <Button onClick={ () => handleDemand('FINALIZADO','Pedidos finalizados') } variant="contained">Finalizados</Button>
+                    <option>FEITOS</option>
 
-                    <Button onClick={ () => handleDemand('REJEITADO','Pedidos rejeitados') } variant="contained">Rejeitados</Button>
+                    <option>SEPARADOS</option>
 
-                    </div>
+                    <option>EM ROTA DE ENTREGA</option>
 
-                    <br/>
+                    <option>RECEBÍVEIS</option>
 
-                    <div className='date-input'>
+                    <option>FINALIZADOS</option>
 
-                    <label>
-                    
-                            <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
+                    <option>REJEITADOS</option>
 
+                </select>
 
-                    </label>
+                <span>Data</span>
 
-                </div>
-
-
+                <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
 
             </div>
 
@@ -123,30 +175,45 @@ export default function Demand({headerTitle}){
 
                                <ButtonSt>
 
-                                <Link target='_blank' to={demand.carrinho_id.toString()}>Visualizar</Link>
+                                    <Link target='_blank' to={demand.carrinho_id.toString()}>VISUALIZAR</Link>
 
                                </ButtonSt>
 
                                 { demandOptions.demandType === 'RECEBIDO' && (
                                     <>
-                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'aprovado') }  variant="contained">Aceitar</ButtonSt>
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'aprovado') }  variant="contained">ACEITAR</ButtonSt>
 
-                                        <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">Recusar</ButtonSt>
+                                        <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">RECUSAR</ButtonSt>
 
                                     </>
                                 )}
 
                                 { demandOptions.demandType === 'SEPARAÇÃO' && (
                                     <>
-                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'Saiu para entrega') }  variant="contained">Saiu pra entrega</ButtonSt>
+                                       
+                                       { demand.metodo_entrega === 'ENTREGAR EM CASA' && (
+
+
+                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'Saiu para entrega') }  variant="contained">JÁ SAIU PARA ENTREGA</ButtonSt>
+
+                                       )}
+
+                                        { demand.metodo_entrega === 'BUSCAR NA LOJA' && (
+
+
+                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'Recebível') }  variant="contained">JÁ PODE SER BUSCADO NO ESTABELECIMENTO</ButtonSt>
+
+                                       )}
+
+
 
                                     </>
                                 )}
 
-                                { demandOptions.demandType === 'ENTREGA' && (
+                                { demandOptions.demandType === 'ENTREGA' || demandOptions.demandType === 'RECEBÍVEIS' && (
                                     <>
 
-                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'finalizado') } variant="contained">Finalizar</ButtonSt>
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'finalizado') } variant="contained">FINALIZADO</ButtonSt>
 
                                     </>
                                 )}

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export default styled.button`
 
-    width: 120px;
-    height: 45px;
+    width: 250px;
+    height: 55px;
     background-color: ${({theme}) => theme.geralColor };
     border-radius: 10px;
     font-weight: bold;
