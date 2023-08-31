@@ -1,6 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
+
 import Home from './pages/Home';
+
 import Demand from './pages/Demand';
+
+import ShowDemand from './pages/ShowDemand';
+
+import Clients from './pages/Clients';
 
 export default function MainRoutes({headerTitle}){
 
@@ -10,6 +16,10 @@ export default function MainRoutes({headerTitle}){
             <Route path='/' element={<Home headerTitle={headerTitle}/>}/>
 
             <Route path='/pedidos' element={<Demand headerTitle={headerTitle}/>}/>
+
+            <Route path='/pedidos/:id' element={<ShowDemand/>}/>
+
+            <Route path='/clientes' element={<Clients/>}/>
 
         </Routes>
     )

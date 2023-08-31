@@ -12,6 +12,11 @@ export const DeliveryContainer = styled.section`
         flex-direction: column;
         justify-content: center;
         padding:30px;
+        
+
+        @media(max-witdh:760px){
+            padding: 0px;
+        }
 
     }
 
@@ -32,6 +37,7 @@ export const DeliveryContainer = styled.section`
             border-radius: 5px;
             font-weight: bold;
             padding:20px;
+            
 
         }
 
@@ -40,11 +46,21 @@ export const DeliveryContainer = styled.section`
             width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             justify-content: center;
             gap:20px;
 
+            @media(max-width:760px){
+                justify-content: center;
+                align-items: center;
+            }
+
         }
+
+        @media(max-width:760px){
+            width: 100%;
+            padding:0px;
+        }
+
 
 
     }
@@ -93,6 +109,7 @@ export const DeliveryContainer = styled.section`
             height: 40px;
         }
 
+
     }
 
     .delivery-options{
@@ -118,6 +135,14 @@ export const DeliveryContainer = styled.section`
         box-shadow: 6px 6px 6px 6px grey;
         padding:20px;
         border-radius: 10px;
+
+        @media(max-width:760px){
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap:30px;
+            justify-content: center;
+        }
 
     }
 

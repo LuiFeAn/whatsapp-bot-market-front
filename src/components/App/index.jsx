@@ -1,12 +1,17 @@
 import * as S from './styles';
 
 import Header from '../Header';
+
 import GlobalStyles from '../../assets/styles/global';
+
 import { defaultTheme } from '../../assets/themes/default';
 
 import MainRoutes from '../../routes';
+
 import { DemandProvider } from '../../contexts/demandContext';
+
 import { ThemeProvider } from 'styled-components';
+
 import { useState } from 'react';
 
 export default function App(){
@@ -20,18 +25,18 @@ export default function App(){
 
                 <GlobalStyles/>
 
-                    <Header title={headerTitle}/>
+                <Header title={headerTitle}/>
 
-                    <S.Container>
+                <S.Container>
 
-                        <DemandProvider>
+                    <DemandProvider>
 
-                            <MainRoutes headerTitle={{
-                                getter: headerTitle,
-                                setter: setHeaderTitle
-                            }}/>
+                        <MainRoutes headerTitle={{
+                            getter: headerTitle,
+                            setter: setHeaderTitle
+                        }}/>
 
-                        </DemandProvider>
+                    </DemandProvider>
 
                 </S.Container>
 

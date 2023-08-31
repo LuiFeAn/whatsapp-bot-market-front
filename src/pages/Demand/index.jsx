@@ -117,6 +117,32 @@ export default function Demand({headerTitle}){
 
     }
 
+    async function downloadProof(client){
+
+        const response = await econoAPI.get(`/proofs/${client.comprovante}`,{
+            responseType:'arraybuffer'
+        });
+
+        const { data } = response;
+
+        const imageData = new Blob([data]);
+
+        const url = window.URL.createObjectURL(imageData);
+
+        const link = document.createElement('a');
+
+        link.href = url;
+
+        link.setAttribute('download',`${client.comprovante}`);
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+
+    }
+
     return (
         <S.DeliveryContainer>
 
@@ -173,14 +199,25 @@ export default function Demand({headerTitle}){
 
                                 <p><strong>MÉTODO DE PAGAMENTO: {demand.metodo_pagamento}</strong></p>
 
-                               <ButtonSt>
+                              <Link target='_blank' to={demand.demand_id.toString()}>
 
-                                    <Link target='_blank' to={demand.carrinho_id.toString()}>VISUALIZAR</Link>
+                                    <ButtonSt>
 
-                               </ButtonSt>
+                                        Visualizar
+                                        
+                                    </ButtonSt>
+
+                                </Link>
 
                                 { demandOptions.demandType === 'RECEBIDO' && (
                                     <>
+
+                                        { demand.metodo_pagamento === 'PIX' && (
+
+                                            <ButtonSt onClick={ () => downloadProof( demand) }  variant="contained">COMPROVANTE</ButtonSt>
+
+                                        )}
+
                                         <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'aprovado') }  variant="contained">ACEITAR</ButtonSt>
 
                                         <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">RECUSAR</ButtonSt>
@@ -210,7 +247,7 @@ export default function Demand({headerTitle}){
                                     </>
                                 )}
 
-                                { demandOptions.demandType === 'ENTREGA' || demandOptions.demandType === 'RECEBÍVEIS' && (
+                                { demandOptions.demandType === 'ENTREGA' && (
                                     <>
 
                                         <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'finalizado') } variant="contained">FINALIZADO</ButtonSt>
