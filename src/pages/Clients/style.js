@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+import { Input as inp } from "../../components/Input";
+
+console.log(Input);
+
 export const Container = styled.div`
 
     width: 80%;
@@ -43,6 +47,12 @@ export const Container = styled.div`
         align-items:center;
         justify-content: space-between;
 
+        .infos{
+            display: flex;
+            align-items: center;
+            gap:20px;
+        }
+
         .icons{
             display: flex;
             align-items: center;
@@ -60,6 +70,18 @@ export const Container = styled.div`
 
     table{
         width: 100%;
+        tr{
+             word-wrap: break-word;
+        }
     }
+
+`;
+
+export const NewRegisterContainer = styled.div`
+
+     input {
+        
+
+        }
 
 `;
