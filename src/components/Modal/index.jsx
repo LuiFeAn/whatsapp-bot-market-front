@@ -8,6 +8,7 @@ export default function Modal({
     buttonCancelColor,
     title,
     description,
+    modalWidth = '100%',
     titleColor = 'red',
     confirmTitle = 'Sim',
     confirmHandler,
@@ -18,7 +19,7 @@ export default function Modal({
     if( visible ){
 
         return createPortal(
-            <S.Container>
+            <S.Container style={{ width: modalWidth }}>
     
                 <div className='modal'>
     
@@ -30,7 +31,7 @@ export default function Modal({
 
                     <div className='buttons'>
 
-                        <button style={{ background: buttonConfirmColor}} onClick={confirmHandler}>{confirmTitle}</button>
+                        <button type='button' style={{ background: buttonConfirmColor}} onClick={confirmHandler}>{confirmTitle}</button>
 
                         <button style={ { background: buttonCancelColor }} onClick={cancelHandler}>{CancelTitle}</button>
 

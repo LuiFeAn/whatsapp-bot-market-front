@@ -15,6 +15,7 @@ export const Container = styled.div`
 
     .modal{
 
+        width: 40%;
         background-color: white;
         border-radius: 10px;
         padding:40px;
@@ -25,6 +26,15 @@ export const Container = styled.div`
         flex-direction: column;
         word-wrap: break-word;
 
+        @media(max-width:760px){
+            width: 80%;
+
+            input{
+                width:200px;
+            }
+
+        }
+
         .buttons{
 
             padding:40px;
@@ -32,12 +42,12 @@ export const Container = styled.div`
             align-items: center;
             justify-content: center;
             color:white;
-            font-weight: bold;
             gap:20px;
 
             button {
                 width: 150px;
                 height: 50px;
+                font-weight: bold;
                 border-radius: 10px;
                 border: none;
                 cursor: pointer;

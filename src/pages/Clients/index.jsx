@@ -15,7 +15,8 @@ import phoneMask from '../../utils/phoneNumberMask';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '../../components/Input';
 import Button from '../../components/Button';
-import ReactInputMask from 'react-input-mask';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
 
 export default function Clients(){
 
@@ -39,7 +40,43 @@ export default function Clients(){
 
     const [ message, setMessage ] = useState('');
 
-    const [ registerNewUser, setRegisterNewUser ] = useState(false);
+    const [ registerNewUserModal, setRegisterNewUserModal ] = useState(false);
+
+    const [ forEdit, setForEdit ] = useState(false);
+
+    useEffect( () => {
+
+        if( registerNewUserModal ){
+
+            setForEdit(false);
+
+        }
+
+    },[]);
+
+    const registerClientSchema = yup.object().shape({
+        whatsapp: yup.string().required('Informe o número do Whatsapp'),
+        contactNumber: yup.string().required('Informe o número para contato'),
+        fullName: yup.string().required('Informe o nome completo').max(150),
+        adress: yup.string().notRequired().max(150),
+        neighborhood: yup.string().notRequired(),
+        houseNumber: yup.string().notRequired(),
+        complement: yup.string().notRequired()
+    });
+
+    const registerClientValidation = useFormik({
+        initialValues:{
+            whatsapp:'',
+            contactNumber:'',
+            fullName:'',
+            adress:'',
+            neighborhood:'',
+            houseNumber:'',
+            complement:'',
+        },
+        validationSchema: registerClientSchema,
+        onSubmit:registerNewClient
+    });
 
     async function getUsers(){
 
@@ -150,11 +187,17 @@ export default function Clients(){
     }
 
     function cancelRegister(){
-        setRegisterNewUser(false);
+        setRegisterNewUserModal(false);
     }
 
     function newRegister(){
-        setRegisterNewUser(true);
+        setRegisterNewUserModal(true);
+    }
+
+    async function registerNewClient(event){
+
+       console.log('ok')
+
     }
 
     return(
@@ -181,25 +224,25 @@ export default function Clients(){
 
         <S.Container>
 
-            <Button style={ { height:'30px'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
+            <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
 
-            <Modal visible={registerNewUser} titleColor={'blue'} cancelHandler={cancelRegister} confirmTitle='Cadastrar' CancelTitle='Cancelar' title={'CADASTRAR NOVO USUÁRIO'}>
+            <Modal visible={registerNewUserModal} confirmHandler={registerClientValidation.handleSubmit} titleColor={'blue'} cancelHandler={cancelRegister} confirmTitle='Cadastrar' CancelTitle='Cancelar' title={'CADASTRAR NOVO USUÁRIO'}>
 
                 <S.NewRegisterContainer>
 
-                    <ReactInputMask mask='(99) 99999-9999' placeholder='N° Whatsapp'></ReactInputMask>
+                    <Input {...registerClientValidation.getFieldProps('whatsapp')} mask='(99) 99999-9999' placeholder='N° Whatsapp'></Input>
 
-                    <ReactInputMask placeholder='N° Telefone para Contato'></ReactInputMask>
+                    <Input {...registerClientValidation.getFieldProps('contactNumber')} mask='(99) 99999-9999' placeholder='N° Telefone para Contato'></Input>
 
-                    <Input placeholder='Nome Completo'></Input>
+                    <Input {...registerClientValidation.getFieldProps('fullName')} placeholder='Nome Completo'></Input>
 
-                    <Input placeholder='Endereço'></Input>
+                    <Input {...registerClientValidation.getFieldProps('adress')} placeholder='Endereço'></Input>
 
-                    <Input placeholder='Bairro'></Input>
+                    <Input {...registerClientValidation.getFieldProps('neighborhood')} placeholder='Bairro'></Input>
 
-                    <Input placeholder='N° Casa'></Input>
+                    <Input {...registerClientValidation.getFieldProps('houseNumber')} placeholder='N° Casa'></Input>
 
-                    <Input placeholder='Complemento'></Input>;
+                    <Input {...registerClientValidation.getFieldProps('complement')} placeholder='Complemento'></Input>;
 
                 </S.NewRegisterContainer>
 

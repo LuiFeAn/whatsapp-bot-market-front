@@ -1,9 +1,5 @@
 import styled from "styled-components";
 
-import { Input as inp } from "../../components/Input";
-
-console.log(Input);
-
 export const Container = styled.div`
 
     width: 80%;
@@ -77,11 +73,19 @@ export const Container = styled.div`
 
 `;
 
-export const NewRegisterContainer = styled.div`
+export const NewRegisterContainer = styled.form`
 
-     input {
-        
 
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap:30px;
+
+    input {
+        border:2px solid black;
+        font-weight: 16px;
+        border-radius: 10px;
+    }
 
 `;
