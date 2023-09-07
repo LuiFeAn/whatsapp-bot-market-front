@@ -4,16 +4,10 @@ import { createPortal } from "react-dom";
 export default function Modal({
     visible,
     children,
-    buttonConfirmColor,
-    buttonCancelColor,
     title,
     description,
     modalWidth = '100%',
     titleColor = 'red',
-    confirmTitle = 'Sim',
-    confirmHandler,
-    cancelHandler,
-    CancelTitle = 'Não'
 }) {
 
     if( visible ){
@@ -27,13 +21,9 @@ export default function Modal({
 
                     <p><strong>{description}</strong></p>
 
-                    { children }
-
                     <div className='buttons'>
 
-                        <button type='button' style={{ background: buttonConfirmColor}} onClick={confirmHandler}>{confirmTitle}</button>
-
-                        <button style={ { background: buttonCancelColor }} onClick={cancelHandler}>{CancelTitle}</button>
+                        { children }
 
                     </div>
     

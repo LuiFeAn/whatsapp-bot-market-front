@@ -8,18 +8,18 @@ import { useFormik } from 'formik';
 
 import { toast } from 'react-toastify';
 
-import Button from '../../../components/Button';
+import Modal from '../../../components/Modal';
 
-export default function ClientForm({ onSubmit, forEdit }){
+export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit, title }){
 
     const registerClientSchema = yup.object().shape({
         whatsapp: yup.string().required('Informe o número do Whatsapp'),
         contactNumber: yup.string().required('Informe o número para contato'),
-        fullName: yup.string().required('Informe o nome completo').max(150),
-        adress: yup.string().notRequired().max(150),
-        neighborhood: yup.string().notRequired(),
-        houseNumber: yup.string().notRequired(),
-        complement: yup.string().notRequired()
+        fullName: yup.string().required('Informe o nome completo').max(150,'O nome deve possuir no máximo 150 caracteres'),
+        adress: yup.string().notRequired().max(100,'O endereço deve possuir no máximo 150 caracteres'),
+        neighborhood: yup.string().notRequired().max(65,'O bairro deve possuir no máximo 65 caracteres'),
+        houseNumber: yup.string().notRequired().max(100000,'O Número da casa deve possuir no máximo 100000 caracteres'),
+        complement: yup.string().notRequired().max(100,'O complemento deve possuir no máximo 100 caracteres')
     });
 
     const registerClientValidation = useFormik({
@@ -32,52 +32,61 @@ export default function ClientForm({ onSubmit, forEdit }){
             houseNumber:'',
             complement:'',
         },
+        validateOnMount:true,
         validationSchema: registerClientSchema,
-        onSubmit: submit
+        onSubmit: async values => await onSubmit(values)
     });
 
-    async function submit(event){
+    console.log(registerClientValidation.values.whatsapp.length);
 
-        console.log(event);
+    function handleRequest(event){
 
-        if( !forEdit ){
+        event.preventDefault();
 
-            console.log(registerClientValidation.isValid)
+        if( !forEdit && !registerClientValidation.isValid ){
+
+            for(const value in registerClientValidation.errors ){
+
+                toast.error(registerClientValidation.errors[value]);
+
+            }
+
+            return
 
         }
 
-        await onSubmit({
-            whatsapp: registerClientValidation.values.whatsapp,
-            fullName: registerClientValidation.values.fullName,
-            contactNumber: registerClientValidation.values.contactNumber,
-            adress: registerClientValidation.values.neighborhood,
-            houseNumber: registerClientValidation.values.houseNumber,
-            complement: registerClientValidation.values.complement
-        });
+        registerClientValidation.handleSubmit();
 
     }
 
     return(
-        <S.NewRegisterContainer>
 
-            <Input {...registerClientValidation.getFieldProps('whatsapp')} mask='(99) 99999-9999' placeholder='N° Whatsapp'></Input>
+        <Modal visible={visible} titleColor={'blue'} confirmTitle='Cadastrar' CancelTitle='Cancelar' title={title}>
 
-            <Input {...registerClientValidation.getFieldProps('contactNumber')} mask='(99) 99999-9999' placeholder='N° Telefone para Contato'></Input>
+            <S.NewRegisterContainer onSubmit={handleRequest}>
 
-            <Input {...registerClientValidation.getFieldProps('fullName')} placeholder='Nome Completo'></Input>
+                <Input {...registerClientValidation.getFieldProps('whatsapp')} mask='(99) 99999-9999' placeholder='N° Whatsapp'></Input>
 
-            <Input {...registerClientValidation.getFieldProps('adress')} placeholder='Endereço'></Input>
+                <Input {...registerClientValidation.getFieldProps('contactNumber')} mask='(99) 99999-9999' placeholder='N° Telefone para Contato'></Input>
 
-            <Input {...registerClientValidation.getFieldProps('neighborhood')} placeholder='Bairro'></Input>
+                <Input {...registerClientValidation.getFieldProps('fullName')} placeholder='Nome Completo'></Input>
 
-            <Input {...registerClientValidation.getFieldProps('houseNumber')} placeholder='N° Casa'></Input>
+                <Input {...registerClientValidation.getFieldProps('adress')} placeholder='Endereço'></Input>
 
-            <Input {...registerClientValidation.getFieldProps('complement')} placeholder='Complemento'></Input>
+                <Input {...registerClientValidation.getFieldProps('neighborhood')} placeholder='Bairro'></Input>
 
-            <Button>Test</Button>
-            
+                <Input {...registerClientValidation.getFieldProps('houseNumber')} placeholder='N° Casa'></Input>
 
-    </S.NewRegisterContainer>
+                <Input {...registerClientValidation.getFieldProps('complement')} placeholder='Complemento'></Input>
+
+                <button type='submit'>Cadastrar</button>
+
+                <button onClick={onCancelSubmit} type='button'>Cancelar</button>
+
+            </S.NewRegisterContainer>
+
+        </Modal>
+
     )
 
 }

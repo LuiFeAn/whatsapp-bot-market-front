@@ -13,10 +13,7 @@ import Modal from '../../components/Modal';
 import { toast } from 'react-toastify';
 import phoneMask from '../../utils/phoneNumberMask';
 import { useNavigate } from 'react-router-dom';
-import { Input } from '../../components/Input';
 import Button from '../../components/Button';
-import * as yup from 'yup';
-import { useFormik } from 'formik';
 import ClientForm from './Form';
 
 export default function Clients(){
@@ -173,15 +170,58 @@ export default function Clients(){
         setRegisterNewUserModal(true);
     }
 
+    function handleUpdateUser(){
+        setForEdit(true);
+    }
+
+    function handleCancelUpdateUser(){
+        setForEdit(false);
+    }
+
     async function registerNewClient(infos){
 
-        const promise = econoAPI.post('/users',infos);
+        const { whatsapp, fullName, ...rest } = infos;
 
-        await toast.promise(promise,{
+        const promises = [
+
+            econoAPI.post(`/users`,{
+                whatsappId: whatsapp,
+                fullName
+            }),
+            econoAPI.post(`/users/infos/${whatsapp}`,rest)
+
+        ];
+
+        toast.promise(promises,{
             success:'Cliente cadastrado com sucesso',
+            pending:'Cadastrando cliente...',
+            error:'Não foi possível cadastrar este cliente'
         })
 
     }
+
+    async function updateClient(infos){
+
+        const { whatsapp, fullName, ...rest } = infos;
+
+        const promises = [
+
+            econoAPI.patch('/users',{
+                whatsappId: whatsapp,
+                fullName
+            }),
+            econoAPI.patch(`users/infos/${currentUser.id}`,rest)
+
+        ];
+
+        await toast.promise(promises,{
+            success:'Cliente atualizado com sucesso',
+            pending:'Atualizando cliente...',
+            error:'Não foi possível atualizar este cliente'
+        })
+
+    }
+
 
     return(
         <>
@@ -209,11 +249,19 @@ export default function Clients(){
 
             <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
 
-            <Modal visible={registerNewUserModal} confirmHandler={registerNewClient} titleColor={'blue'} cancelHandler={cancelRegister} confirmTitle='Cadastrar' CancelTitle='Cancelar' title={'CADASTRAR NOVO USUÁRIO'}>
+            <ClientForm 
+                onCancelSubmit={cancelRegister} 
+                onSubmit={registerNewClient} 
+                visible={registerNewUserModal}
+                title='CADASTRAR NOVO USUÁRIO' 
+                forEdit={false}/>
 
-                <ClientForm onSubmit={registerNewClient} forEdit={false}/>
-
-            </Modal>
+            <ClientForm 
+                onCancelSubmit={handleCancelUpdateUser} 
+                onSubmit={updateClient}
+                title={`ATUALIZAR INFORMAÇÕES DE "${currentUser.nome_completo?.toUpperCase()}"`} 
+                visible={forEdit} 
+                forEdit={true}/>
 
             <div className='search-area'>
 
@@ -293,7 +341,10 @@ export default function Clients(){
                                             setDeleteUser(true)
                                         } } src={deleteIcon}/>
 
-                                        <img onClick={ () => Nav(`${user.id}`)} src={updateIcon}/> 
+                                        <img onClick={ () => {
+                                            setCurrentUser(user);
+                                            handleUpdateUser()
+                                        }} src={updateIcon}/> 
 
                                     </tr>
 
