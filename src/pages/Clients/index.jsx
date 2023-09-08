@@ -44,6 +44,8 @@ export default function Clients(){
 
     const [ forInsert, setForInsert ] = useState(false);
 
+    const [ clearFields, setClearFields ] = useState(false);
+
     useEffect( () => {
 
         if( registerNewUserModal ){
@@ -148,6 +150,7 @@ export default function Clients(){
         try{
             await econoAPI.delete(`/users/${currentUser.id}`);
             setCurrentUser(false);
+            setDeleteUser(false)
             await getUsers();            
             toast.success(`${currentUser.nome_completo.toUpperCase()} removido com sucesso da lista de clientes`);
         }catch(err){
@@ -178,47 +181,49 @@ export default function Clients(){
         setForEdit(false);
     }
 
-    async function registerNewClient(infos){
+    async function handleClientInfos(infos){
 
-        const { whatsapp, fullName, ...rest } = infos;
+        const { whatsapp, fullName, forEdit, ...rest } = infos;
 
-        const promises = [
+        const otherInfosValues = Object.values(rest)
+        .every( value => value );
 
-            econoAPI.post(`/users`,{
+        try {
+            await toast.promise(econoAPI[ !forEdit ? 'post' : 'put'](!forEdit ? '/users' : `/users/${infos.whatsapp}`),{
                 whatsappId: whatsapp,
                 fullName
-            }),
-            econoAPI.post(`/users/infos/${whatsapp}`,rest)
+            }),{
+                success:`Cliente ${ !forEdit ? 'cadastrado' : 'atualizado com'} com sucesso !`,
+                pending:`${ !forEdit ? 'Cadastrando' : 'Atualizando'} cliente...`,
+            };
+    
+        }catch(err){
+            
+            err.response.data.errors.forEach( error => toast.error(error));
 
-        ];
+        }
+        
 
-        toast.promise(promises,{
-            success:'Cliente cadastrado com sucesso',
-            pending:'Cadastrando cliente...',
-            error:'Não foi possível cadastrar este cliente'
-        })
+        if( otherInfosValues ){
 
-    }
+            await econoAPI[ !infos.forEdit ? 'post' : 'patch'](`users/infos/${infos.whatsapp}`,rest)
 
-    async function updateClient(infos){
+        }
 
-        const { whatsapp, fullName, ...rest } = infos;
+        await getUsers();
 
-        const promises = [
+        if( !infos.forEdit ){
 
-            econoAPI.patch('/users',{
-                whatsappId: whatsapp,
-                fullName
-            }),
-            econoAPI.patch(`users/infos/${currentUser.id}`,rest)
+            setRegisterNewUserModal(false);
 
-        ];
+        }else{
 
-        await toast.promise(promises,{
-            success:'Cliente atualizado com sucesso',
-            pending:'Atualizando cliente...',
-            error:'Não foi possível atualizar este cliente'
-        })
+            setForEdit(false);
+
+        }
+
+        setClearFields(true);
+
 
     }
 
@@ -232,7 +237,10 @@ export default function Clients(){
             cancelHandler={cancelDelete}
             title={`Tem certeza que deseja remover "${currentUser.nome_completo?.toUpperCase()}" da lista de clientes ?`}
             description={'Todo o histórico de compras deste usuário será removido permanentemente.'}
-        />
+        >
+            <button onClick={confirmDelete}>Remover</button>
+            <button onClick={cancelDelete}>Cancelar</button>
+        </Modal>
 
          <Modal 
             visible={sendMessage} 
@@ -250,15 +258,17 @@ export default function Clients(){
             <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
 
             <ClientForm 
-                onCancelSubmit={cancelRegister} 
-                onSubmit={registerNewClient} 
+                onCancelSubmit={cancelRegister}
+                clearFields={clearFields} 
+                onSubmit={handleClientInfos} 
                 visible={registerNewUserModal}
                 title='CADASTRAR NOVO USUÁRIO' 
                 forEdit={false}/>
 
             <ClientForm 
                 onCancelSubmit={handleCancelUpdateUser} 
-                onSubmit={updateClient}
+                onSubmit={handleClientInfos}
+                clearFields={clearFields}
                 title={`ATUALIZAR INFORMAÇÕES DE "${currentUser.nome_completo?.toUpperCase()}"`} 
                 visible={forEdit} 
                 forEdit={true}/>
@@ -331,10 +341,10 @@ export default function Clients(){
 
                                     <tr className='icons'>
 
-                                        <img onClick={ () => {
+                                        {/* <img onClick={ () => {
                                             setCurrentUser(user);
                                             setSendMessage(true)
-                                        } } src={messageIcon}/>
+                                        } } src={messageIcon}/> */}
 
                                         <img onClick={ () => {
                                             setCurrentUser(user)

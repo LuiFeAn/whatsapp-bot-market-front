@@ -10,11 +10,16 @@ import { toast } from 'react-toastify';
 
 import Modal from '../../../components/Modal';
 
-export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit, title }){
+import phoneNumberMask from '../../../utils/phoneNumberMask';
+
+import convertToPhoneId from '../../../utils/convertToPhoneId';
+import { useEffect } from 'react';
+
+export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit, title, clearFields }){
 
     const registerClientSchema = yup.object().shape({
-        whatsapp: yup.string().required('Informe o número do Whatsapp'),
-        contactNumber: yup.string().required('Informe o número para contato'),
+        whatsapp: yup.string().required('Informe o número do Whatsapp').min(11,'Número de Whatsapp inválido'),
+        contactNumber: yup.string().notRequired('Informe o número para contato').min(11,'Número para contato inválido'),
         fullName: yup.string().required('Informe o nome completo').max(150,'O nome deve possuir no máximo 150 caracteres'),
         adress: yup.string().notRequired().max(100,'O endereço deve possuir no máximo 150 caracteres'),
         neighborhood: yup.string().notRequired().max(65,'O bairro deve possuir no máximo 65 caracteres'),
@@ -34,10 +39,16 @@ export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit,
         },
         validateOnMount:true,
         validationSchema: registerClientSchema,
-        onSubmit: async values => await onSubmit(values)
+        onSubmit: async values => await onSubmit({
+            ...values,
+            forEdit,
+            whatsapp: convertToPhoneId(values.whatsapp)
+        })
     });
 
-    console.log(registerClientValidation.values.whatsapp.length);
+    function handlePhoneField(field,event){
+        registerClientValidation.setFieldValue(field,phoneNumberMask(event.target.value));
+    }
 
     function handleRequest(event){
 
@@ -59,15 +70,38 @@ export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit,
 
     }
 
+    useEffect( () => {
+
+        if(clearFields){
+
+            registerClientValidation.setFieldValue('whatsapp','');
+
+            registerClientValidation.setFieldValue('contactNumber','');
+
+            registerClientValidation.setFieldValue('fullName','');
+
+            registerClientValidation.setFieldValue('adress','');
+
+            registerClientValidation.setFieldValue('neighborhood','');
+
+            registerClientValidation.setFieldValue('houseNumber','');
+
+            registerClientValidation.setFieldValue('complement','');
+
+
+        }
+
+    },[clearFields]);
+
     return(
 
         <Modal visible={visible} titleColor={'blue'} confirmTitle='Cadastrar' CancelTitle='Cancelar' title={title}>
 
             <S.NewRegisterContainer onSubmit={handleRequest}>
 
-                <Input {...registerClientValidation.getFieldProps('whatsapp')} mask='(99) 99999-9999' placeholder='N° Whatsapp'></Input>
+                <Input {...registerClientValidation.getFieldProps('whatsapp')} onChange={ (event) => handlePhoneField('whatsapp',event)} placeholder='N° Whatsapp'></Input>
 
-                <Input {...registerClientValidation.getFieldProps('contactNumber')} mask='(99) 99999-9999' placeholder='N° Telefone para Contato'></Input>
+                <Input {...registerClientValidation.getFieldProps('contactNumber')} onChange={ (event) => handlePhoneField('contactNumber',event)} placeholder='N° Telefone para Contato'></Input>
 
                 <Input {...registerClientValidation.getFieldProps('fullName')} placeholder='Nome Completo'></Input>
 

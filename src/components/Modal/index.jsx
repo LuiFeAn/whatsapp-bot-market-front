@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 export default function Modal({
     visible,
     children,
+    clear = false,
     title,
     description,
     modalWidth = '100%',
