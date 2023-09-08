@@ -167,62 +167,67 @@ export default function Clients(){
 
     function cancelRegister(){
         setRegisterNewUserModal(false);
+        setClearFields(true);
     }
 
     function newRegister(){
         setRegisterNewUserModal(true);
+        setClearFields(false);
     }
 
     function handleUpdateUser(){
+        setClearFields(false);
         setForEdit(true);
     }
 
     function handleCancelUpdateUser(){
         setForEdit(false);
+        setClearFields(true);
     }
 
     async function handleClientInfos(infos){
 
-        const { whatsapp, fullName, forEdit, ...rest } = infos;
-
-        const otherInfosValues = Object.values(rest)
-        .every( value => value );
+        const { whatsapp, fullName, ...rest } = infos;
 
         try {
-            await toast.promise(econoAPI[ !forEdit ? 'post' : 'put'](!forEdit ? '/users' : `/users/${infos.whatsapp}`),{
+
+            const otherInfosValues = Object.values(rest)
+            .every( value => value );
+
+            await econoAPI[ !forEdit ? 'post' : 'patch'](!forEdit ? '/users' : `/users/${ !forEdit ? infos.whatsapp : currentUser.id }`,{
                 whatsappId: whatsapp,
                 fullName
-            }),{
-                success:`Cliente ${ !forEdit ? 'cadastrado' : 'atualizado com'} com sucesso !`,
-                pending:`${ !forEdit ? 'Cadastrando' : 'Atualizando'} cliente...`,
-            };
+            })
+
+            if( otherInfosValues ){
+
+                await econoAPI[ !infos.forEdit ? 'post' : 'patch'](`users/infos/${ !forEdit ? infos.whatsapp : currentUser.id }`,rest)
+    
+            }
+
+            toast.success(`Cliente ${ !forEdit ? 'cadastrado' : 'atualizado com'} com sucesso !`);
+    
+            if( !forEdit ){
+    
+                setRegisterNewUserModal(false);
+    
+            }
+
+            if( forEdit ){
+
+                setForEdit(false);
+
+            }
+
+            await getUsers();
+    
+            setClearFields(true);
     
         }catch(err){
-            
+
             err.response.data.errors.forEach( error => toast.error(error));
 
         }
-        
-
-        if( otherInfosValues ){
-
-            await econoAPI[ !infos.forEdit ? 'post' : 'patch'](`users/infos/${infos.whatsapp}`,rest)
-
-        }
-
-        await getUsers();
-
-        if( !infos.forEdit ){
-
-            setRegisterNewUserModal(false);
-
-        }else{
-
-            setForEdit(false);
-
-        }
-
-        setClearFields(true);
 
 
     }

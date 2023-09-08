@@ -18,9 +18,9 @@ import { useEffect } from 'react';
 export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit, title, clearFields }){
 
     const registerClientSchema = yup.object().shape({
-        whatsapp: yup.string().required('Informe o número do Whatsapp').min(11,'Número de Whatsapp inválido'),
+        whatsapp: yup.string()[ !forEdit ? 'required' : 'notRequired']('Informe o número do Whatsapp').min(11,'Número de Whatsapp inválido'),
         contactNumber: yup.string().notRequired('Informe o número para contato').min(11,'Número para contato inválido'),
-        fullName: yup.string().required('Informe o nome completo').max(150,'O nome deve possuir no máximo 150 caracteres'),
+        fullName: yup.string()[ !forEdit ? 'required' : 'notRequired']('Informe o nome completo').max(150,'O nome deve possuir no máximo 150 caracteres'),
         adress: yup.string().notRequired().max(100,'O endereço deve possuir no máximo 150 caracteres'),
         neighborhood: yup.string().notRequired().max(65,'O bairro deve possuir no máximo 65 caracteres'),
         houseNumber: yup.string().notRequired().max(100000,'O Número da casa deve possuir no máximo 100000 caracteres'),
@@ -42,7 +42,7 @@ export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit,
         onSubmit: async values => await onSubmit({
             ...values,
             forEdit,
-            whatsapp: convertToPhoneId(values.whatsapp)
+            whatsapp: values.whatsapp.length > 0 ? convertToPhoneId(values.whatsapp) : ''
         })
     });
 
@@ -61,7 +61,7 @@ export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit,
                 toast.error(registerClientValidation.errors[value]);
 
             }
-
+            
             return
 
         }
