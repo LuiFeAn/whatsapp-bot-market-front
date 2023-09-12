@@ -223,7 +223,7 @@ export default function Demand({headerTitle}){
                                         <>
                                         
 
-                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'ENTREGA')}>{demand.metodo_entrega === 'ENTREGAR EM CASA' ? 'JÁ SAIU PARA ENTREGA' : 'JÁ PODE SER BUSCADO NO ESTABELECIMENTO'}</ButtonSt>
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,demand.metodo_entrega)}>{demand.metodo_entrega === 'ENTREGAR EM CASA' ? 'JÁ SAIU PARA ENTREGA' : 'JÁ PODE SER BUSCADO NO ESTABELECIMENTO'}</ButtonSt>
 
 
 
