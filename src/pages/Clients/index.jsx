@@ -66,6 +66,8 @@ export default function Clients(){
 
             const { data } = response
 
+            console.log(data);
+
             setUsers(data);
 
        }catch(err){
@@ -148,7 +150,7 @@ export default function Clients(){
     async function confirmDelete(){
 
         try{
-            await econoAPI.delete(`/users/${currentUser.id}`);
+            await econoAPI.delete(`/users/${currentUser.usuario_id}`);
             setCurrentUser(false);
             setDeleteUser(false)
             await getUsers();            
@@ -192,16 +194,28 @@ export default function Clients(){
         try {
 
             const otherInfosValues = Object.values(rest)
-            .every( value => value );
+            .some( value => value );
 
-            await econoAPI[ !forEdit ? 'post' : 'patch'](!forEdit ? '/users' : `/users/${ !forEdit ? infos.whatsapp : currentUser.id }`,{
+            const method = !forEdit ? 'post' : 'patch'
+
+            const methodURI = method === 'post' ? '' : currentUser.usuario_id;
+
+            await econoAPI[method](`/users/${methodURI}`,{
                 whatsappId: whatsapp,
                 fullName
-            })
+            });
+
+            if( method === 'post' ){
+
+                rest.whatsappId = whatsapp;
+
+            }
 
             if( otherInfosValues ){
 
-                await econoAPI[ !infos.forEdit ? 'post' : 'patch'](`users/infos/${ !forEdit ? infos.whatsapp : currentUser.id }`,rest)
+                await econoAPI[method](`users/infos/${methodURI}`,{
+                    ...rest,
+                });
     
             }
 
@@ -340,7 +354,7 @@ export default function Clients(){
 
                                         <p>{user.nome_completo?.toUpperCase()}</p>
 
-                                        <p>{phoneMask(user.id)}</p>
+                                        <p>{phoneMask(user.usuario_id)}</p>
 
                                     </tr>
 
