@@ -54,6 +54,21 @@ export const DeliveryContainer = styled.section`
                 align-items: center;
             }
 
+            .demand-buttons{
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap:20px;
+
+                @media(max-width:760px){
+                flex-direction: column;
+                }
+
+
+            }
+
+
         }
 
         @media(max-width:760px){

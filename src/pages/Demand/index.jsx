@@ -85,19 +85,13 @@ export default function Demand({headerTitle}){
 
         if( value === 'SEPARADOS' ){
 
-            return handleDemand('SEPARAÇÃO','Pedidos separados');
+            return handleDemand('SEPARAÇÃO','Pedidos aceitos que já se encontram em fase de separação');
 
         }
 
-        if( value === 'EM ROTA DE ENTREGA' ){
+        if( value === 'A PRONTA ENTREGA' ){
 
-            return handleDemand('ENTREGA','Pedidos em rota de entrega');
-
-        }
-
-        if( value === 'RECEBÍVEIS' ){
-
-            return handleDemand('RECEBÍVEL','Pedidos recebíveis no estabelecimento');
+            return handleDemand('ENTREGA','Pedidos em rota de entrega ou recebíveis no estabelecimento');
 
         }
 
@@ -157,9 +151,7 @@ export default function Demand({headerTitle}){
 
                     <option>SEPARADOS</option>
 
-                    <option>EM ROTA DE ENTREGA</option>
-
-                    <option>RECEBÍVEIS</option>
+                    <option>A PRONTA ENTREGA</option>
 
                     <option>FINALIZADOS</option>
 
@@ -199,61 +191,57 @@ export default function Demand({headerTitle}){
 
                                 <p><strong>MÉTODO DE PAGAMENTO: {demand.metodo_pagamento}</strong></p>
 
-                              <Link target='_blank' to={demand.demand_id.toString()}>
+                                <div className='demand-buttons'>
+
+                                    <Link target='_blank' to={demand.demand_id.toString()}>
 
                                     <ButtonSt>
 
-                                        Visualizar
+                                        VISUALIZAR
                                         
                                     </ButtonSt>
 
-                                </Link>
+                                    </Link>
 
-                                { demandOptions.demandType === 'RECEBIDO' && (
-                                    <>
+                                    { demandOptions.demandType === 'RECEBIDO' && (
+                                        <>
 
-                                        { demand.metodo_pagamento === 'PIX' && (
+                                            { demand.metodo_pagamento === 'PIX' && (
 
-                                            <ButtonSt onClick={ () => downloadProof( demand) }  variant="contained">COMPROVANTE</ButtonSt>
+                                                <ButtonSt onClick={ () => downloadProof( demand) }  variant="contained">COMPROVANTE</ButtonSt>
 
-                                        )}
+                                            )}
 
-                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'aprovado') }  variant="contained">ACEITAR</ButtonSt>
+                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'APROVADO') }  variant="contained">ACEITAR</ButtonSt>
 
-                                        <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">RECUSAR</ButtonSt>
+                                            <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">RECUSAR</ButtonSt>
 
-                                    </>
-                                )}
+                                        </>
+                                    )}
 
-                                { demandOptions.demandType === 'SEPARAÇÃO' && (
-                                    <>
-                                       
-                                       { demand.metodo_entrega === 'ENTREGAR EM CASA' && (
+                                    { demandOptions.demandType === 'SEPARAÇÃO' && (
+                                        <>
+                                        
 
-
-                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'Saiu para entrega') }  variant="contained">JÁ SAIU PARA ENTREGA</ButtonSt>
-
-                                       )}
-
-                                        { demand.metodo_entrega === 'BUSCAR NA LOJA' && (
-
-
-                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'Recebível') }  variant="contained">JÁ PODE SER BUSCADO NO ESTABELECIMENTO</ButtonSt>
-
-                                       )}
+                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'ENTREGA')}>{demand.metodo_entrega === 'ENTREGAR EM CASA' ? 'JÁ SAIU PARA ENTREGA' : 'JÁ PODE SER BUSCADO NO ESTABELECIMENTO'}</ButtonSt>
 
 
 
-                                    </>
-                                )}
+                                        </>
+                                    )}
 
-                                { demandOptions.demandType === 'ENTREGA' && (
-                                    <>
+                                    { demandOptions.demandType === 'ENTREGA' && (
+                                        <>
 
-                                        <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'finalizado') } variant="contained">FINALIZADO</ButtonSt>
+                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'FINALIZADO') } variant="contained">
+                                                { demand.metodo_entrega === 'ENTREGAR EM CASA' ? 'JÁ SAIU PARA ENTREGA' : 'JÁ PODE SER RECEBIDO NO ESTABELECIMENTO' }
+                                            </ButtonSt>
 
-                                    </>
-                                )}
+                                        </>
+                                    )}
+
+                                    
+                                </div>
 
 
                             </div>
