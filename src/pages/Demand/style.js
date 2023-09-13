@@ -32,11 +32,14 @@ export const DeliveryContainer = styled.section`
 
         #demand-text{
 
+            width: 100%;
+            text-align: center;
             background-color: green;
             color:white;
             border-radius: 5px;
             font-weight: bold;
             padding:20px;
+            font-size: 1.0em;
             
 
         }

@@ -183,7 +183,7 @@ export default function Demand({headerTitle}){
 
                     { demandOptions.demands.map( demand => (
                         <>
-                            <div className='delivery-item'>
+                            <div id={demand.id} className='delivery-item'>
 
                                 <p><strong>Pedido N° {demand.demand_id}</strong></p>
 
@@ -247,6 +247,8 @@ export default function Demand({headerTitle}){
                             </div>
                         </>
                     ))}
+
+                    <br></br> <br></br>
 
                      <Stack spacing={2}>
 
