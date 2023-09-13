@@ -1,33 +1,48 @@
 import { useEffect, useState } from 'react';
 import * as S from './style';
 import econoAPI from '../../services/econobotAPI';
-
+import { toast } from 'react-toastify';
+import useLoading from '../../hooks/useLoading';
 
 export default function BookletPage(){
 
-    const [ booklet, setBooklet ] = useState({});
-
     const [ booklets, setBooklets ] = useState([]);
 
-    function handleInputFile(event){
-        setBooklet(event.target.files[0]);
+    const { loading, setLoading } = useLoading();
+
+    async function handleInputFile(event){
+
+        await sendBooklet(event.target.files[0]);
+
+        await getBooklets();
+
     }
 
     async function getBooklets(){
 
+        setLoading(true);
+
         const response = await econoAPI.get('/booklets');
+
+        setLoading(false);
 
         setBooklets(response.data);
 
     }
 
-    async function sendBooklet(){
+    async function sendBooklet(booklet){
 
         const form = new FormData();
 
+        console.log(booklet);
+
         form.append('encarte',booklet);
 
-        await econoAPI.post('/booklets',form);
+        await toast.promise(econoAPI.post('/booklets',form),{
+            success:'Encarte enviado',
+            pending:'Enviando encarte...',
+            error:'Não foi possível enviar o encarte'
+        });
 
     }
 
@@ -35,23 +50,20 @@ export default function BookletPage(){
 
         getBooklets();
 
-        sendBooklet();
-
-    },[booklet]);
+    },[]);
 
     return (
         <S.Container>
 
            <div className='insert-booklet'>
 
-                <span>CLIQUE PARA ADICIONAR UM ENCARTE</span>
-
-                <S.BookletButton>
-                    +
-                    <input onChange={handleInputFile} type="file" id="fileInput" class="hidden"/>
-                </S.BookletButton>
+                <input onChange={handleInputFile} type="file" id="fileInput" class="hidden"/>
 
            </div>
+
+           { !loading && booklets.length > 0 && booklets.map( booklet => (
+                <img src={booklet.encarte}/>
+            ))}
 
         </S.Container>
     )

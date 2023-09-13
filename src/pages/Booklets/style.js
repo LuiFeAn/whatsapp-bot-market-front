@@ -5,8 +5,14 @@ export const Container = styled.div`
 
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
     gap:20px;
+
+    img {
+        width: 250px;
+        height: 250px;
+    }
 
     .insert-booklet {
         display: flex;
@@ -20,17 +26,12 @@ export const Container = styled.div`
 
 export const BookletButton = styled.button`
 
-    width: 150px;
-    height: 150px;
+    width: 80px;
+    height: 80px;
     border: 1px solid black;
     text-align: center;
     border-radius: 10%;
     font-size:20px;
     cursor: pointer;
-
-    input{
-        margin-top:-150px;
-        opacity: 0%;
-    }
 
 `;
