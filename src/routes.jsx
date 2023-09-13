@@ -8,6 +8,8 @@ import ShowDemand from './pages/ShowDemand';
 
 import Clients from './pages/Clients';
 
+import BookletPage from './pages/Booklets';
+
 export default function MainRoutes({headerTitle}){
 
     return (
@@ -18,6 +20,8 @@ export default function MainRoutes({headerTitle}){
             <Route path='/pedidos' element={<Demand headerTitle={headerTitle}/>}/>
 
             <Route path='/pedidos/:id' element={<ShowDemand/>}/>
+
+            <Route path='/encartes' element={<BookletPage/>}/>
 
             <Route path='/clientes' element={<Clients/>}/>
 
