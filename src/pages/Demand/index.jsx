@@ -24,32 +24,25 @@ export default function Demand({headerTitle}){
 
     async function changeDemandStatus(demandId,status){
 
-        const promise = econoAPI.patch(`/demands/${demandId}`,{
-            status,
-            motivo:reason
-        });
+       try {
 
-        await toast.promise(promise,{
-            success:`Pedido ${status} com sucesso !`,
-            error:{
-                render({data:{response:{data}}}){
+            await econoAPI.patch(`/demands/${demandId}`,{
+                status,
+                motivo:reason
+            });
 
-                    let errors = '';
+            toast.success(`Pedido ${status.toLowerCase()} com sucesso !`);
 
-                    data.forEach(function(error){
+       }catch(err){
 
-                        errors += '\n' + error.msg;
+            toast.error(`Não foi possível ${status} o pedido no momento.`)
 
-                    });
+       }finally{
 
-                    return errors
+            await demandOptions.getDemands();
 
-                }
-            },
-            pending:`${status} pedido...`
-        });
+       }
 
-        await demandOptions.getDemands();
 
     }
 
@@ -77,13 +70,13 @@ export default function Demand({headerTitle}){
 
         const { target:{ value } } = event;
 
-        if( value === 'FEITOS' ){
+        if( value === 'RECEBIDOS' ){
 
-           return handleDemand('RECEBIDO','Pedidos recebidos');
+           return handleDemand('RECEBIDO','Pedidos que foram recebidos');
 
         }
 
-        if( value === 'SEPARADOS' ){
+        if( value === 'ACEITOS' ){
 
             return handleDemand('SEPARAÇÃO','Pedidos aceitos que já se encontram em fase de separação');
 
@@ -147,9 +140,9 @@ export default function Demand({headerTitle}){
 
                 <select onChange={handleSelectInput}>
 
-                    <option>FEITOS</option>
+                    <option>RECEBIDOS</option>
 
-                    <option>SEPARADOS</option>
+                    <option>ACEITOS</option>
 
                     <option>A PRONTA ENTREGA</option>
 
@@ -234,7 +227,7 @@ export default function Demand({headerTitle}){
                                         <>
 
                                             <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'FINALIZADO') } variant="contained">
-                                                { demand.metodo_entrega === 'ENTREGAR EM CASA' ? 'JÁ SAIU PARA ENTREGA' : 'JÁ PODE SER RECEBIDO NO ESTABELECIMENTO' }
+                                                { demand.metodo_entrega === 'ENTREGAR EM CASA' ? 'FINALIZADO ( ENTREGUE EM DOMICÍLIO )' : 'FINALIZADO ( ENTREGUE NO ESTABELECIMENTO )' }
                                             </ButtonSt>
 
                                         </>
