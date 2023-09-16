@@ -10,8 +10,8 @@ export const Container = styled.div`
     gap:20px;
 
     img {
-        width: 250px;
-        height: 250px;
+        width: 300px;
+        height: 300px;
     }
 
     .insert-booklet {
@@ -20,6 +20,21 @@ export const Container = styled.div`
         justify-content: center;
         flex-direction: column;
         gap:20px;
+    }
+
+    .booklet-area{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap:30px;
+
+        .booklet-items{
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            flex-direction: column;
+        }
     }
 
 `;

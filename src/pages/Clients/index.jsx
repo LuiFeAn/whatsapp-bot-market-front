@@ -46,6 +46,10 @@ export default function Clients(){
 
     const [ clearFields, setClearFields ] = useState(false);
 
+    const [ sendBookletList, setSendBookletList ] = useState([]);
+
+    const [ currentUserFilterSelect, setCurrentUserFilterSelect ] = useState('Clientes');
+
     useEffect( () => {
 
         if( registerNewUserModal ){
@@ -62,11 +66,9 @@ export default function Clients(){
 
             setLoading(true);
 
-            const response = await econoAPI.get(`/users?search=${search.getter}&page=${page.getter}&quanty=${quanty.getter}&contacts=${getContacts}&withPromotion=${withPromotion}`);
+            const response = await econoAPI.get(`/users?search=${search.getter}&page=${page.getter}&quanty=${quanty.getter}&contacts=${getContacts}&withPromotion=${withPromotion}&getAll=false`);
 
             const { data } = response
-
-            console.log(data);
 
             setUsers(data);
 
@@ -90,6 +92,8 @@ export default function Clients(){
     function handleSelect(event){
 
         const { target: { value } } = event;
+
+        setCurrentUserFilterSelect(value);
 
         if( value === 'Clientes' ){
 
@@ -185,6 +189,56 @@ export default function Clients(){
     function handleCancelUpdateUser(){
         setForEdit(false);
         setClearFields(true);
+    }
+
+    async function handleSelectAll(){
+
+        const users = await econoAPI.get(`/users?getAll=true&contacts=${getContacts}&withPromotion=${withPromotion}`);
+
+        const dontExists = users.data.filter( (
+            user => !sendBookletList.includes(user.usuario_id)
+        ) ).map( (
+            user => user.usuario_id
+        ) );
+
+        setSendBookletList( prev => [ ...prev, ...dontExists ] );
+    }
+
+
+    async function handleSendBookletButton(){
+
+        const promise = econoAPI.post('/send-booklets',{
+            toUsers: sendBookletList
+        });
+
+        await toast.promise(promise,{
+            success:{
+                render(){
+
+                    setSendBookletList([]);
+
+                    return 'Encartes enviados com sucesso'
+
+                }
+            },
+            error:'Não foi possível enviar os encartes',
+            pending:'Enviando encartes...'
+        });
+
+    }
+
+    function handleAddClientSendBooklet(client){
+
+        if( !sendBookletList.some( list => list === client.usuario_id )){
+
+            setSendBookletList( prev => [ ...prev, client.usuario_id, ] );
+
+        }else{
+
+            setSendBookletList( prev => prev.filter( list => list != client.usuario_id) );
+
+        }        
+
     }
 
     async function handleClientInfos(infos){
@@ -350,7 +404,9 @@ export default function Clients(){
                             { users.length > 0 && users.map( user => (
                                 <tr className='user'>
 
-                                    <tr className='infos'>
+                                    <tr onClick={ () => handleAddClientSendBooklet(user) } className={`infos ${
+                                        sendBookletList.includes(user.usuario_id) ? 'selected' : ''
+                                    }`}>
 
                                         <p>{user.nome_completo?.toUpperCase()}</p>
 
@@ -388,6 +444,23 @@ export default function Clients(){
 
 
             </table>
+
+             <div className='batch-options'>
+
+                    <Button style={ { height:'40px',border:'none'}} onClick={handleSelectAll}>SELECIONAR TODOS OS {currentUserFilterSelect.toUpperCase()}</Button>
+
+                    { sendBookletList.length > 0 && (
+                        <>
+                            <p><strong>{sendBookletList.length} usuário(s) selecionado(s)</strong></p>
+
+                            <Button style={ { height:'40px',border:'none'}} onClick={handleSendBookletButton}>ENVIAR ENCARTES</Button>
+
+                            <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>DELETAR TODOS OS SELECIONADOS</Button>
+                            
+                        </>
+                    )}
+
+            </div>
 
             <br/><br/>
 

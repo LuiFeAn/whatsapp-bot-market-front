@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as S from './style';
 import econoAPI from '../../services/econobotAPI';
 import { toast } from 'react-toastify';
 import useLoading from '../../hooks/useLoading';
+import ResourceCrudIcons from '../../components/ResourceCrudIcons';
 
 export default function BookletPage(){
 
@@ -34,8 +35,6 @@ export default function BookletPage(){
 
         const form = new FormData();
 
-        console.log(booklet);
-
         form.append('encarte',booklet);
 
         await toast.promise(econoAPI.post('/booklets',form),{
@@ -52,18 +51,57 @@ export default function BookletPage(){
 
     },[]);
 
+    const handleDeleteBooklet = useCallback( async (currentItem) => {
+
+        try{
+            
+            await econoAPI.delete(`/booklets/${currentItem.id}`);
+
+            toast.success('Encarte removido com sucesso');
+
+            await getBooklets();
+
+
+        }catch(err){
+
+            toast.error('Não foi possível remover o encarte')
+
+        }
+
+
+    },[]);
+
     return (
         <S.Container>
 
-           <div className='insert-booklet'>
+            <div className='insert-booklet'>
 
                 <input onChange={handleInputFile} type="file" id="fileInput" class="hidden"/>
 
            </div>
 
-           { !loading && booklets.length > 0 && booklets.map( booklet => (
-                <img src={booklet.encarte}/>
-            ))}
+           { loading && (
+            <p>Carregando...</p>
+           )}
+
+           { !loading && booklets.length > 0 && (
+
+                <div className='booklet-area'>
+
+                { booklets.map( booklet => (
+                    
+                    <div className='booklet-items'>
+
+                        <img src={booklet.encarte}/>
+
+                        <ResourceCrudIcons currentItem={booklet} onDelete={handleDeleteBooklet} forEdit={false}/>
+                        
+
+                    </div>
+                ))}
+
+            </div>
+           )}
 
         </S.Container>
     )

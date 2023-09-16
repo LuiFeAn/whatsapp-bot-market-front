@@ -9,6 +9,13 @@ export const Container = styled.div`
     padding:30px;
     padding-bottom:100px;
 
+    .batch-options{
+        display: flex;
+        margin-top:30px;
+        align-items: start;
+        justify-content: space-around;
+    }
+
     .search-area{
 
         width: 100%;
@@ -30,7 +37,18 @@ export const Container = styled.div`
 
         @media(max-width:760px){
 
+            width: 100%;
             flex-direction: column;
+
+            input, select{
+
+                width: 150px;
+                border-radius:10px;
+                height: 40px;
+                text-align: center;
+                border:none;
+
+            }
 
         }
 
@@ -42,11 +60,22 @@ export const Container = styled.div`
         gap: 20px;
         align-items:center;
         justify-content: space-between;
+        margin-top: 20px;
 
         .infos{
+            width: 100%;
+            padding:5px;
             display: flex;
             align-items: center;
+            word-wrap: break-word;
             gap:20px;
+            cursor: pointer;
+        }
+
+        .selected{
+            background-color: white;
+            transition: 1s;
+            border-radius: 10px;
         }
 
         .icons{
