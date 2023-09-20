@@ -23,9 +23,8 @@ export const DeliveryContainer = styled.section`
     .demand-handler-container{
 
         position: relative;
-        width: 60%;
+        width: 100%;
         display: flex;
-        padding:30px;
         margin-top:20px;
         align-items: center;
         justify-content: center;
@@ -50,6 +49,7 @@ export const DeliveryContainer = styled.section`
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             gap:20px;
 
             @media(max-width:760px){
@@ -89,10 +89,17 @@ export const DeliveryContainer = styled.section`
         padding:20px;
         box-shadow: 6px 6px 6px 6px grey;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         gap:20px;
+
+        .filter-items-container{
+            display: flex;
+            align-content: center;
+            flex-direction: column;
+            justify-content: center;
+            gap:10px;
+        }
 
         span{
             font-weight: bold;
@@ -125,6 +132,11 @@ export const DeliveryContainer = styled.section`
         input{
             width: 250px;
             height: 40px;
+        }
+
+        @media(max-width:760px){
+           flex-direction: column;
+           justify-content: center;
         }
 
 

@@ -59,7 +59,6 @@ export function DemandProvider({ children }){
 
         }catch(err){
 
-            console.log(err);
 
         }finally{
 

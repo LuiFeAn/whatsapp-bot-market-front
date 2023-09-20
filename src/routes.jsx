@@ -19,11 +19,11 @@ export default function MainRoutes({headerTitle}){
 
             <Route path='/pedidos' element={<Demand headerTitle={headerTitle}/>}/>
 
-            <Route path='/pedidos/:id' element={<ShowDemand/>}/>
+            <Route path='/pedidos/:id' element={<ShowDemand headerTitle={headerTitle}/>}/>
 
-            <Route path='/encartes' element={<BookletPage/>}/>
+            <Route path='/encartes' element={<BookletPage headerTitle={headerTitle}/>}/>
 
-            <Route path='/clientes' element={<Clients/>}/>
+            <Route path='/clientes' element={<Clients headerTitle={headerTitle}/>}/>
 
         </Routes>
     )

@@ -7,7 +7,7 @@ import ResourceCrudIcons from '../../components/ResourceCrudIcons';
 import Modal from '../../components/Modal';
 import { Input } from '../../components/Input';
 
-export default function BookletPage(){
+export default function BookletPage({headerTitle}){
 
     const [ booklets, setBooklets ] = useState([]);
 
@@ -100,6 +100,12 @@ export default function BookletPage(){
 
         }
 
+
+    },[]);
+
+    useEffect( () => {
+
+        headerTitle.setter('Encartes');
 
     },[]);
 

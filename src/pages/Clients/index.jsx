@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
 import ClientForm from './Form';
 
-export default function Clients(){
+export default function Clients({headerTitle}){
 
     const { search, page, quanty } = usePaginationProps();
 
@@ -299,6 +299,12 @@ export default function Clients(){
 
 
     }
+
+    useEffect( () => {
+
+        headerTitle.setter('Clientes');
+
+    },[]);
 
 
     return(

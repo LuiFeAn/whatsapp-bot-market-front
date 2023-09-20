@@ -25,21 +25,19 @@ export default function Demand({headerTitle}){
     async function changeDemandStatus(demandId,status){
 
        try {
-
+        
             await econoAPI.patch(`/demands/${demandId}`,{
                 status,
                 motivo:reason
             });
+
+            await demandOptions.getDemands();
 
             toast.success(`Pedido ${status.toLowerCase()} com sucesso !`);
 
        }catch(err){
 
             toast.error(`Não foi possível ${status} o pedido no momento.`)
-
-       }finally{
-
-            await demandOptions.getDemands();
 
        }
 
@@ -135,26 +133,33 @@ export default function Demand({headerTitle}){
 
             <div className='filters'>
 
+                <div className='filter-items-container'>
 
-                <span>Pedidos</span>
+                    <span>Pedidos</span>
 
-                <select onChange={handleSelectInput}>
+                    <select onChange={handleSelectInput}>
 
-                    <option>RECEBIDOS</option>
+                        <option>RECEBIDOS</option>
 
-                    <option>ACEITOS</option>
+                        <option>ACEITOS</option>
 
-                    <option>A PRONTA ENTREGA</option>
+                        <option>A PRONTA ENTREGA</option>
 
-                    <option>FINALIZADOS</option>
+                        <option>FINALIZADOS</option>
 
-                    <option>REJEITADOS</option>
+                        <option>REJEITADOS</option>
 
-                </select>
+                    </select>
 
-                <span>Data</span>
+                </div>
 
-                <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
+                <div className='filter-items-container'>
+
+                    <span>Data</span>
+
+                    <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
+
+                </div>
 
             </div>
 
@@ -174,7 +179,11 @@ export default function Demand({headerTitle}){
 
                     )}
 
-                    { demandOptions.demands.map( demand => (
+                    { demandOptions.loading && (
+                        <p>Carregando...</p>
+                    )}
+
+                    { !demandOptions.loading && demandOptions.demands.length > 0 && demandOptions.demands.map( demand => (
                         <>
                             <div id={demand.id} className='delivery-item'>
 

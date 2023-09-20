@@ -4,7 +4,7 @@ import econoAPI from '../../services/econobotAPI';
 import { useParams } from 'react-router-dom';
 import useLoading from '../../hooks/useLoading';
 
-export default function ShowDemand(){
+export default function ShowDemand({headerTitle}){
 
     const { id } = useParams();
 
@@ -42,6 +42,12 @@ export default function ShowDemand(){
             }
 
         })();
+
+    },[]);
+
+    useEffect( () => {
+
+        headerTitle.setter(`Pedido ${id}`);
 
     },[]);
 
