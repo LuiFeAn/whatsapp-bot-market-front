@@ -62,7 +62,7 @@ export const DeliveryContainer = styled.section`
 
                 display: flex;
                 align-items: center;
-                justify-content: center;
+                justify-content: start;
                 gap:20px;
 
                 @media(max-width:760px){
