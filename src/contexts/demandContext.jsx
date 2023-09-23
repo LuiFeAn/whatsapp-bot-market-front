@@ -59,6 +59,7 @@ export function DemandProvider({ children }){
 
         }catch(err){
 
+            console.log(err);
 
         }finally{
 
@@ -99,6 +100,7 @@ export function DemandProvider({ children }){
             loading,
             demandDate,
             demandType,
+            setDemands,
             getDemands,
             setCurrentPage,
             handleDemandDate,

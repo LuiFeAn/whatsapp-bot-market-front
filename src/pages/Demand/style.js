@@ -28,6 +28,7 @@ export const DeliveryContainer = styled.section`
         margin-top:20px;
         align-items: center;
         justify-content: center;
+        
 
         #demand-text{
 
@@ -93,12 +94,12 @@ export const DeliveryContainer = styled.section`
         align-items: center;
         gap:20px;
 
-        .filter-items-container{
+        .filter-items{
             display: flex;
-            align-content: center;
             flex-direction: column;
-            justify-content: center;
+            align-items: center;
             gap:10px;
+            justify-content: center;
         }
 
         span{
@@ -135,8 +136,7 @@ export const DeliveryContainer = styled.section`
         }
 
         @media(max-width:760px){
-           flex-direction: column;
-           justify-content: center;
+          flex-direction: column;
         }
 
 

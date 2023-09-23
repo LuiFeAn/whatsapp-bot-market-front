@@ -122,9 +122,13 @@ export default function ClientForm({ onSubmit, forEdit, visible, onCancelSubmit,
 
                 <Input {...registerClientValidation.getFieldProps('complement')} placeholder='Complemento'></Input>
 
-                <button type='submit'>Cadastrar</button>
+                <div className='but'>
 
-                <button onClick={onCancelSubmit} type='button'>Cancelar</button>
+                    <button type='submit'>Cadastrar</button>
+
+                    <button onClick={onCancelSubmit} type='button'>Cancelar</button>
+
+                </div>
 
             </S.NewRegisterContainer>
 

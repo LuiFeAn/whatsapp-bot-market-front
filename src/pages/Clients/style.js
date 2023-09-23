@@ -13,7 +13,7 @@ export const Container = styled.div`
         display: flex;
         margin-top:30px;
         align-items: start;
-        justify-content: space-around;
+        justify-content: start;
     }
 
     .search-area{
@@ -115,6 +115,12 @@ export const NewRegisterContainer = styled.form`
         border:2px solid black;
         font-weight: 16px;
         border-radius: 10px;
+    }
+
+    .but{
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
 `;

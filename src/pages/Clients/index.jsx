@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
 import ClientForm from './Form';
 
-export default function Clients({headerTitle}){
+export default function Clients(){
 
     const { search, page, quanty } = usePaginationProps();
 
@@ -300,12 +300,6 @@ export default function Clients({headerTitle}){
 
     }
 
-    useEffect( () => {
-
-        headerTitle.setter('Clientes');
-
-    },[]);
-
 
     return(
         <>
@@ -335,6 +329,12 @@ export default function Clients({headerTitle}){
         <S.Container>
 
             <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
+
+            {  sendBookletList.length > 0 && (
+                <p style={{textAlign:'center'}}><strong>{sendBookletList.length} usuário(s) selecionado(s)</strong></p>
+            )}
+
+            <br/><br/>
 
             <ClientForm 
                 onCancelSubmit={cancelRegister}
@@ -457,11 +457,8 @@ export default function Clients({headerTitle}){
 
                     { sendBookletList.length > 0 && (
                         <>
-                            <p><strong>{sendBookletList.length} usuário(s) selecionado(s)</strong></p>
 
                             <Button style={ { height:'40px',border:'none'}} onClick={handleSendBookletButton}>ENVIAR ENCARTES</Button>
-
-                            <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>DELETAR TODOS OS SELECIONADOS</Button>
                             
                         </>
                     )}

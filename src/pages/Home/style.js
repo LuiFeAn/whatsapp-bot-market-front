@@ -5,9 +5,11 @@ export const Container = styled.div`
 
     display: flex;
     align-items: center;
-    gap:10px;
+    justify-content: center;
+    gap:30px;
     width: 100%;
-    padding-left:100px;
+    padding-bottom: 100px;
+    flex-wrap: wrap;
 
     @media(max-width:760px){
 

@@ -1,5 +1,4 @@
 import * as S from './style';
-import { Button } from '@mui/material';
 import emptyIcon from '../../assets/images/empty.png';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
@@ -12,24 +11,23 @@ import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import ButtonSt from '../../components/Button';
 
+import { BeatLoader } from 'react-spinners';
+
 export default function Demand({headerTitle}){
 
     const demandOptions = useContext(demandContext);
-
-    const [ reason, setReason ] = useState('');
-
-    const [ demandRecuse, setDemandRecuse ] = useState(false);
 
     const [ currentDemandTitle, setCurrentDemandTitle ] = useState('Pedidos recebidos');
 
     async function changeDemandStatus(demandId,status){
 
        try {
-        
+
             await econoAPI.patch(`/demands/${demandId}`,{
                 status,
-                motivo:reason
             });
+
+            demandOptions.setDemands([]);
 
             await demandOptions.getDemands();
 
@@ -128,12 +126,18 @@ export default function Demand({headerTitle}){
 
     }
 
+    useEffect( () => {
+
+        return () => demandOptions.handleDemandType('RECEBIDO')
+
+    },[]);
+
     return (
         <S.DeliveryContainer>
 
             <div className='filters'>
 
-                <div className='filter-items-container'>
+                <div className='filter-items'>
 
                     <span>Pedidos</span>
 
@@ -153,7 +157,7 @@ export default function Demand({headerTitle}){
 
                 </div>
 
-                <div className='filter-items-container'>
+                <div className='filter-items'>
 
                     <span>Data</span>
 
@@ -179,11 +183,13 @@ export default function Demand({headerTitle}){
 
                     )}
 
+                    <br></br><br />
+
                     { demandOptions.loading && (
-                        <p>Carregando...</p>
+                       <BeatLoader size={20} color='blue'/>
                     )}
 
-                    { !demandOptions.loading && demandOptions.demands.length > 0 && demandOptions.demands.map( demand => (
+                    { !demandOptions.loading && demandOptions.demands.map( demand => (
                         <>
                             <div id={demand.id} className='delivery-item'>
 
@@ -216,7 +222,7 @@ export default function Demand({headerTitle}){
 
                                             <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'APROVADO') }  variant="contained">ACEITAR</ButtonSt>
 
-                                            <ButtonSt onClick={ () => setDemandRecuse(true) } variant="contained">RECUSAR</ButtonSt>
+                                            <ButtonSt variant="contained">RECUSAR</ButtonSt>
 
                                         </>
                                     )}

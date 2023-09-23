@@ -13,6 +13,13 @@ export const Container = styled.div`
     justify-content: center;
     top:0px;
 
+    h3{
+        background-color: #2e3092;
+        padding:20px;
+        border-radius: 10px;
+        color:white !important;
+    }
+
     .modal{
 
         width: 40%;
@@ -35,16 +42,7 @@ export const Container = styled.div`
 
         }
 
-        .buttons{
-
-            padding:40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color:white;
-            gap:20px;
-
-            button {
+        button {
                 width: 150px;
                 height: 50px;
                 font-weight: bold;
@@ -52,8 +50,6 @@ export const Container = styled.div`
                 border: none;
                 cursor: pointer;
             }
-
-        }
 
     }
 
