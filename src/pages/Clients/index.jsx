@@ -423,20 +423,21 @@ export default function Clients(){
 
                                     <tr className='icons'>
 
-                                        {/* <img onClick={ () => {
-                                            setCurrentUser(user);
-                                            setSendMessage(true)
-                                        } } src={messageIcon}/> */}
+                                        { !getContacts && (
+                                            <>
 
-                                        <img onClick={ () => {
-                                            setCurrentUser(user)
-                                            setDeleteUser(true)
-                                        } } src={deleteIcon}/>
+                                                <img onClick={ () => {
+                                                setCurrentUser(user)
+                                                setDeleteUser(true)
+                                                }} src={deleteIcon}/>
 
-                                        <img onClick={ () => {
-                                            setCurrentUser(user);
-                                            handleUpdateUser()
-                                        }} src={updateIcon}/> 
+
+                                                <img onClick={ () => {
+                                                setCurrentUser(user);
+                                                handleUpdateUser()
+                                                }} src={updateIcon}/> 
+                                            </>
+                                        ) }
 
                                     </tr>
 
