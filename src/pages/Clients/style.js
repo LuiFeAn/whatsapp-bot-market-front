@@ -7,13 +7,20 @@ export const Container = styled.div`
     border-radius: 10px;
     outline: 2px solid #dee1e7;
     padding:30px;
+    transition: all 1s;
     padding-bottom:100px;
 
     .batch-options{
+
         display: flex;
-        margin-top:30px;
+        margin-top:50px;
         align-items: start;
         justify-content: start;
+
+    }
+
+    .status{
+        word-break: break-word;
     }
 
     .search-area{

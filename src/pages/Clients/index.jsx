@@ -329,7 +329,21 @@ export default function Clients(){
 
         <S.Container>
 
-            <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
+             <div className='batch-options'>
+
+                <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
+
+                <Button style={ { height:'40px',border:'none'}} onClick={handleSelectAll}>SELECIONAR TODOS OS {currentUserFilterSelect.toUpperCase()}</Button>
+
+                { sendBookletList.length > 0 && (
+                    <>
+
+                        <Button style={ { height:'40px',border:'none'}} onClick={handleSendBookletButton}>ENVIAR ENCARTES</Button>
+                        
+                    </>
+                )}
+
+            </div>
 
             {  sendBookletList.length > 0 && (
                 <p style={{textAlign:'center'}}><strong>{sendBookletList.length} usuário(s) selecionado(s)</strong></p>
@@ -389,22 +403,26 @@ export default function Clients(){
                 <tr>
 
 
-                    { loading && (
-                        <p style={{textAlign:'center'}}>Carregando...</p>
-                    )}
-
                     { !loading && (
                         <>
 
                              <br></br>
 
-                            { users.length === 0 && !search.getter && (
-                                <p style={{textAlign:'center'}}>Nenhum usuário encontrado</p>
-                            )}
+                           <div className='status'>
 
-                            { users.length === 0 && search.getter && (
-                                <p style={{textAlign:'center'}}>Nenhum resultado encontrado para <strong>"{search.getter}"</strong></p>
-                            )}
+                                { loading && (
+                                    <p style={{textAlign:'center'}}>Carregando...</p>
+                                )}
+
+                                { users.length === 0 && !search.getter && (
+                                    <p style={{textAlign:'center'}}>Nenhum usuário encontrado</p>
+                                )}
+
+                                { users.length === 0 && search.getter && (
+                                    <p style={{textAlign:'center'}}>Nenhum resultado encontrado para <strong>"{search.getter}"</strong></p>
+                                )}
+
+                           </div>
 
                             <br></br>
 
@@ -452,20 +470,6 @@ export default function Clients(){
 
 
             </table>
-
-             <div className='batch-options'>
-
-                    <Button style={ { height:'40px',border:'none'}} onClick={handleSelectAll}>SELECIONAR TODOS OS {currentUserFilterSelect.toUpperCase()}</Button>
-
-                    { sendBookletList.length > 0 && (
-                        <>
-
-                            <Button style={ { height:'40px',border:'none'}} onClick={handleSendBookletButton}>ENVIAR ENCARTES</Button>
-                            
-                        </>
-                    )}
-
-            </div>
 
             <br/><br/>
 
