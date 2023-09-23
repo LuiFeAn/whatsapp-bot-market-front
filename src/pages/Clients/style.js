@@ -121,6 +121,7 @@ export const NewRegisterContainer = styled.form`
         display: flex;
         align-items: center;
         justify-content: center;
+        gap:20px;
     }
 
 `;

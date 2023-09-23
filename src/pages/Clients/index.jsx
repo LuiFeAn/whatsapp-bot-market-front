@@ -312,6 +312,7 @@ export default function Clients(){
             description={'Todo o histórico de compras deste usuário será removido permanentemente.'}
         >
             <button onClick={confirmDelete}>Remover</button>
+            <br/><br/>
             <button onClick={cancelDelete}>Cancelar</button>
         </Modal>
 
