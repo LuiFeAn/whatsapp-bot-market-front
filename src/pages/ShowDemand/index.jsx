@@ -3,6 +3,7 @@ import * as S from './style';
 import econoAPI from '../../services/econobotAPI';
 import { useParams } from 'react-router-dom';
 import useLoading from '../../hooks/useLoading';
+import { toBrl } from '../../utils/toBrl';
 
 export default function ShowDemand({headerTitle}){
 
@@ -28,9 +29,22 @@ export default function ShowDemand({headerTitle}){
 
                 const { data: cartItemsData } = cartItemsResponse;
 
+                const cartItemsWithTotal = cartItemsData.map(function(item){
+
+                    const { valor_produto, quantidade } = item;
+
+                    const total = valor_produto * quantidade
+
+                    return {
+                        ...item,
+                        total
+                    }
+
+                });
+
                 setDemand(demandData);
 
-                setCartItems(cartItemsData);
+                setCartItems(cartItemsWithTotal);
 
             }catch(err){
 
@@ -47,7 +61,7 @@ export default function ShowDemand({headerTitle}){
 
     useEffect( () => {
 
-        headerTitle.setter(`Pedido ${id}`);
+        headerTitle.setter(`Pedido N°${id}`);
 
     },[]);
 
@@ -63,39 +77,80 @@ export default function ShowDemand({headerTitle}){
 
                 <h3>INFORMAÇÕES SOBRE O PEDIDO N° {demand.demand_id}</h3>
 
-                <p>Cliente: {demand.nome_completo.toUpperCase()}</p>
+                <S.UserResume>
 
-                <p>Número de telefone: {demand.numero_telefone}</p>
+                    <p>Cliente: <br/> {demand.nome_completo.toUpperCase()}</p>
+                    
+                    <p>Número de telefone: <br/> {demand.numero_telefone}</p>
 
-                <p>Método de pagamento: {demand.metodo_pagamento}</p>
+                    <p>Método de pagamento: <br/> {demand.metodo_pagamento}</p>
 
-                <p>Método de entrega: {demand.metodo_entrega}</p>
+                    <p>Método de entrega: <br/> {demand.metodo_entrega}</p>
 
-                <p>Endereço: {demand.endereco}</p>
+                    <p>Endereço: <br/> {demand.endereco}</p>
 
-                <p>Bairro: {demand.bairro}</p>
+                    <p>Bairro: <br/> {demand.bairro}</p>
 
-                <p>Complemento: {demand.complemento ?? 'N/A'}</p>
+                    <p>Complemento: <br/> {demand.complemento ?? 'N/A'}</p>
 
-                <p>Total: {demand.total}</p>
+                    <p>Observação:  <br/>{demand.observacao ?? 'N/A'}</p>
 
-                <p>Observação: {demand.observacao ?? 'N/A'}</p>
+                    <p>Troco: <br/> {demand.troco ?? 'N/A'}</p>
 
-                <p>Troco: {demand.troco ?? 'N/A'}</p>
+                </S.UserResume>
 
-                <div className='items'>
+                <br/> <br/> <br/> <br/>
 
-                    { cartItems.map( (item,id) => (
+                <table align='left' cellSpacing={40}>
+
+                        <thead>
+                          
+                            <tr>
+                               
+                                <th>QTD</th>
+
+                                <th>ITEM</th>
+
+                                <th>PREÇO UNT</th>
+
+                                <th>PREÇO TOTAL</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            { cartItems.map( (item,id) => (
                         
-                        <div>
+                                <tr>
+                                
+                                    <td>{item.quantidade}X</td>
+                            
+                                    <td>{item.nome_produto.toUpperCase()}</td>
 
-                            <p>Produto: {item.nome_produto} Quantidade: {item.quantidade}</p>
+                                    <td>{toBrl(+item.valor_produto)}</td>
 
-                        </div>
+                                    <td>{toBrl(item.total)}</td>
 
-                    ))}
+                                </tr>
 
-                </div>
+                            ))}
+                           
+                        </tbody>
+
+                        <hr></hr>
+
+                        <tfoot>
+
+                           <tr>
+
+                                <td>Total: <br/> {toBrl(+demand.total)}</td>
+
+                           </tr>
+
+                        </tfoot>
+
+                    </table>
 
              </div>
            )}
