@@ -331,19 +331,21 @@ export default function Clients(){
 
              <div className='batch-options'>
 
-                <Button style={ { height:'40px',border:'none'}} onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
+                <Button onClick={newRegister}>CADASTRAR NOVO CLIENTE</Button>
 
-                <Button style={ { height:'40px',border:'none'}} onClick={handleSelectAll}>SELECIONAR TODOS OS {currentUserFilterSelect.toUpperCase()}</Button>
+                <Button onClick={handleSelectAll}>SELECIONAR TODOS OS {currentUserFilterSelect.toUpperCase()}</Button>
 
                 { sendBookletList.length > 0 && (
                     <>
 
-                        <Button style={ { height:'40px',border:'none'}} onClick={handleSendBookletButton}>ENVIAR ENCARTES</Button>
+                        <Button onClick={handleSendBookletButton}>ENVIAR ENCARTES</Button>
                         
                     </>
                 )}
 
             </div>
+
+            <br></br>
 
             {  sendBookletList.length > 0 && (
                 <p style={{textAlign:'center'}}><strong>{sendBookletList.length} usuário(s) selecionado(s)</strong></p>

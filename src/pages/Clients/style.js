@@ -13,9 +13,20 @@ export const Container = styled.div`
     .batch-options{
 
         display: flex;
-        margin-top:50px;
         align-items: start;
-        justify-content: start;
+        text-align: center;
+        justify-content: space-between;
+
+        button{
+           border: none;
+        }
+
+        @media(max-width:760px){
+             flex-direction: column;
+             justify-content: center;
+             align-items: center;
+             gap:10px;
+        }
 
     }
 
