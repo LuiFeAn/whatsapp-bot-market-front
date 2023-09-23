@@ -96,10 +96,16 @@ export const DeliveryContainer = styled.section`
 
         .filter-items{
             display: flex;
+            height: 100px;
             flex-direction: column;
-            align-items: center;
-            gap:10px;
+            align-items: start;
+            gap:25px;
             justify-content: center;
+
+             @media(max-width:760px){
+                align-items: center;
+                justify-content: center;
+             }
         }
 
         span{
@@ -125,7 +131,6 @@ export const DeliveryContainer = styled.section`
             outline:none;
             border-radius: 10px;
             font-size: 20px;
-            padding-left: 20px;
 
         }
         

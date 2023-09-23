@@ -29,7 +29,7 @@ export function DemandProvider({ children }){
 
     const [ paginationLimit, setPaginationLimit ] = useState(20);
 
-    const [ userSearch, setUserSearch ] = useState('');
+    const [ clientSearch,setClientSearch ] = useState('');
 
     const { loading, setLoading } = useLoading();
 
@@ -37,6 +37,10 @@ export function DemandProvider({ children }){
 
         setDemandType(type);
 
+    }
+
+    function handleClientSearch(event){
+        setClientSearch(event.target.value);
     }
 
     function handleDemandDate(event){
@@ -51,7 +55,7 @@ export function DemandProvider({ children }){
 
             setLoading(true);
 
-            const response = await econoAPI.get(`/demands?type=${demandType}&date=${demandDate}&page=${currentPage}&quanty=${paginationLimit}&userId=${userSearch}`);
+            const response = await econoAPI.get(`/demands?type=${demandType}&date=${demandDate}&page=${currentPage}&quanty=${paginationLimit}&user_search=${clientSearch}`);
 
             const { data } = response;
 
@@ -74,7 +78,7 @@ export function DemandProvider({ children }){
 
         getDemands();
 
-    },[demandType,demandDate,currentPage,paginationLimit,userSearch]);
+    },[demandType,demandDate,currentPage,paginationLimit,clientSearch]);
 
     useEffect(() => {
 
@@ -103,6 +107,7 @@ export function DemandProvider({ children }){
             setDemands,
             getDemands,
             setCurrentPage,
+            handleClientSearch,
             handleDemandDate,
             handleDemandType
         } }>

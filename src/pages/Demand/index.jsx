@@ -10,8 +10,8 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import ButtonSt from '../../components/Button';
-
 import { BeatLoader } from 'react-spinners';
+import { Input} from '../../components/Input';
 
 export default function Demand({headerTitle}){
 
@@ -136,6 +136,14 @@ export default function Demand({headerTitle}){
         <S.DeliveryContainer>
 
             <div className='filters'>
+
+                <div className='filter-items'>
+
+                    <span>Pesquisa</span>
+
+                    <Input onChange={demandOptions.handleClientSearch} placeholder='Pesquise pelo cliente'></Input>
+
+                </div>
 
                 <div className='filter-items'>
 
