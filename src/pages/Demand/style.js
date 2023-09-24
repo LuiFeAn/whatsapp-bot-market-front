@@ -62,8 +62,14 @@ export const DeliveryContainer = styled.section`
 
                 display: flex;
                 align-items: center;
-                justify-content: start;
+                justify-content: center;
                 gap:20px;
+
+                button{
+                    border:none;
+                    width: 200px;
+                    height: 50px;
+                }
 
                 @media(max-width:760px){
                 flex-direction: column;
