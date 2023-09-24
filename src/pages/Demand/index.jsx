@@ -93,19 +93,17 @@ export default function Demand({headerTitle}){
 
     },[demandType,demandDate,currentPage,paginationLimit,clientSearch]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const socket = io('ws://localhost:3001');
+    //     const socket = io('ws://localhost:3001');
 
-        socket.on('new-demand',function(){
+    //     socket.on('new-demand',async function(){
 
-            getDemands();
+    //         await getDemands();
 
-        });
+    //     });
 
-        return () => socket.close();
-
-    },[]);
+    // },[]);
 
 
     async function changeDemandStatus(demandId,status){
@@ -118,11 +116,11 @@ export default function Demand({headerTitle}){
 
             await getDemands();
 
-            toast.success(`Pedido ${status.toLowerCase()} com sucesso !`);
+            toast.success(`Pedido gerenciado com sucesso !`);
 
        }catch(err){
 
-            toast.error(`Não foi possível ${status} o pedido no momento.`)
+            toast.error(`Não foi possível gerenciar o pedido.`)
 
        }
 

@@ -12,6 +12,8 @@ import { ThemeProvider } from 'styled-components';
 
 import { io } from 'socket.io-client';
 
+import { toast } from 'react-toastify';
+
 import { useState, useEffect } from 'react';
 
 export default function App(){
@@ -24,13 +26,13 @@ export default function App(){
 
         socket.on('new-demand',function(){
 
+            console.log('uaiii');
+
             toast.success(`Você recebeu um novo pedido`,{
                 autoClose:15000
             });
 
         });
-
-        return () => socket.close();
 
     },[]);
 

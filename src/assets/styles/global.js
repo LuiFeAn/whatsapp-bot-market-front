@@ -9,6 +9,7 @@ export default createGlobalStyle`
         overflow-x: hidden;
         font-family: 'Roboto', sans-serif;
         background:white;
+        scroll-behavior: smooth;
 
     }
 
