@@ -2,22 +2,111 @@ import * as S from './style';
 import emptyIcon from '../../assets/images/empty.png';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-import { demandContext } from '../../contexts/demandContext';
 import econoAPI from '../../services/econobotAPI';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useEffect } from 'react';
 import ButtonSt from '../../components/Button';
 import { BeatLoader } from 'react-spinners';
 import { Input} from '../../components/Input';
+import useLoading from '../../hooks/useLoading';
+import { io } from 'socket.io-client';
 
 export default function Demand({headerTitle}){
 
-    const demandOptions = useContext(demandContext);
+    const date = useMemo( () => new Date(),[]);
+
+    const getCurrentDay = useCallback(function(){
+
+        const addZeroToDate = date => date < 10 ? `0${date}` : date;
+
+        return `${date.getFullYear()}-${addZeroToDate(date.getMonth() + 1)}-${addZeroToDate(date.getDate())}`;
+
+    }, []);
 
     const [ currentDemandTitle, setCurrentDemandTitle ] = useState('Pedidos recebidos');
+
+    const [ demands, setDemands ] = useState([]);
+
+    const [ demandType, setDemandType ] = useState('RECEBIDO');
+
+    const [ demandDate, setDemandDate ] = useState(getCurrentDay());
+
+    const [ currentPage, setCurrentPage ] = useState(1);
+
+    const [ paginationLimit, setPaginationLimit ] = useState(20);
+
+    const [ clientSearch,setClientSearch ] = useState('');
+
+    const { loading, setLoading } = useLoading();
+
+    function handleDemandType(type){
+
+        setDemandType(type);
+
+    }
+
+    function handleClientSearch(event){
+        window.scrollTo({
+            top:0,
+            behavior:'smooth'
+        })
+        setClientSearch(event.target.value);
+    }
+
+    function handleDemandDate(event){
+
+        setDemandDate(event.target.value);
+
+    }
+
+    async function getDemands(){
+
+        try{
+
+            setLoading(true);
+
+            const response = await econoAPI.get(`/demands?type=${demandType}&date=${demandDate}&page=${currentPage}&quanty=${paginationLimit}&user_search=${clientSearch}`);
+
+            const { data } = response;
+
+            setDemands(data);
+
+        }catch(err){
+
+            console.log(err);
+
+        }finally{
+
+            setLoading(false);
+
+        }
+
+    }
+
+
+    useEffect( () => {
+
+        getDemands();
+
+    },[demandType,demandDate,currentPage,paginationLimit,clientSearch]);
+
+    useEffect(() => {
+
+        const socket = io('ws://localhost:3001');
+
+        socket.on('new-demand',function(){
+
+            getDemands();
+
+        });
+
+        return () => socket.close();
+
+    },[]);
+
 
     async function changeDemandStatus(demandId,status){
 
@@ -27,9 +116,7 @@ export default function Demand({headerTitle}){
                 status,
             });
 
-            demandOptions.setDemands([]);
-
-            await demandOptions.getDemands();
+            await getDemands();
 
             toast.success(`Pedido ${status.toLowerCase()} com sucesso !`);
 
@@ -44,7 +131,7 @@ export default function Demand({headerTitle}){
 
     function handlePage(event,value){
 
-        demandOptions.setCurrentPage(value);
+       setCurrentPage(value);
 
     }
 
@@ -56,7 +143,7 @@ export default function Demand({headerTitle}){
 
     function handleDemand(status,demandTitle){
 
-        demandOptions.handleDemandType(status);
+       handleDemandType(status);
 
         setCurrentDemandTitle(demandTitle);
 
@@ -128,7 +215,7 @@ export default function Demand({headerTitle}){
 
     useEffect( () => {
 
-        return () => demandOptions.handleDemandType('RECEBIDO')
+        return () =>handleDemandType('RECEBIDO')
 
     },[]);
 
@@ -141,7 +228,7 @@ export default function Demand({headerTitle}){
 
                     <span>Pesquisa</span>
 
-                    <Input onChange={demandOptions.handleClientSearch} placeholder='Pesquise pelo cliente'></Input>
+                    <Input onChange={handleClientSearch} placeholder='Pesquise pelo cliente'></Input>
 
                 </div>
 
@@ -169,7 +256,7 @@ export default function Demand({headerTitle}){
 
                     <span>Data</span>
 
-                    <input value={demandOptions.demandDate} onChange={demandOptions.handleDemandDate} type='date'></input>
+                    <input value={demandDate} onChange={handleDemandDate} type='date'></input>
 
                 </div>
 
@@ -181,7 +268,7 @@ export default function Demand({headerTitle}){
 
                     <p id='demand-text'>{currentDemandTitle.toUpperCase()}</p>
 
-                    { !demandOptions.loading && demandOptions.demands.length === 0 && (
+                    { !loading &&demands.length === 0 && (
 
                         <div className='demand-empty'>
 
@@ -193,11 +280,11 @@ export default function Demand({headerTitle}){
 
                     <br></br><br />
 
-                    { demandOptions.loading && (
+                    {loading && (
                        <BeatLoader size={20} color='blue'/>
                     )}
 
-                    { !demandOptions.loading && demandOptions.demands.map( demand => (
+                    { !loading &&demands.map( demand => (
                         <>
                             <div id={demand.id} className='delivery-item'>
 
@@ -219,7 +306,7 @@ export default function Demand({headerTitle}){
 
                                     </Link>
 
-                                    { demandOptions.demandType === 'RECEBIDO' && (
+                                    {demandType === 'RECEBIDO' && (
                                         <>
 
                                             { demand.metodo_pagamento === 'PIX' && (
@@ -230,12 +317,12 @@ export default function Demand({headerTitle}){
 
                                             <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'APROVADO') }  variant="contained">ACEITAR</ButtonSt>
 
-                                            <ButtonSt variant="contained">RECUSAR</ButtonSt>
+                                            <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'RECUSADO') } variant="contained">RECUSAR</ButtonSt>
 
                                         </>
                                     )}
 
-                                    { demandOptions.demandType === 'SEPARAÇÃO' && (
+                                    {demandType === 'SEPARAÇÃO' && (
                                         <>
                                         
 
@@ -246,7 +333,7 @@ export default function Demand({headerTitle}){
                                         </>
                                     )}
 
-                                    { demandOptions.demandType === 'ENTREGA' && (
+                                    {demandType === 'ENTREGA' && (
                                         <>
 
                                             <ButtonSt onClick={ () => changeDemandStatus(demand.demand_id,'FINALIZADO') } variant="contained">
