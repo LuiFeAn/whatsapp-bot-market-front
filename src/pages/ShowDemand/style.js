@@ -21,7 +21,6 @@ export const Container = styled.section`
     table{
         width: 100%;
         font-size:1.0em;
-        background-color:#eceff5;
         border-radius: 10px;
         font-weight: bold;
         text-align: center;
