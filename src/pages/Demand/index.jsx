@@ -175,9 +175,9 @@ export default function Demand({headerTitle}){
 
         }
 
-        if( value === 'REJEITADOS' ){
+        if( value === 'RECUSADOS' ){
 
-            return handleDemand('REJEITADO','Pedidos rejeitados');
+            return handleDemand('RECUSADO','Pedidos RECUSADOS');
 
         }
 
@@ -244,7 +244,7 @@ export default function Demand({headerTitle}){
 
                         <option>FINALIZADOS</option>
 
-                        <option>REJEITADOS</option>
+                        <option>RECUSADOS</option>
 
                     </select>
 
