@@ -22,7 +22,7 @@ export default function App(){
 
     useEffect(() => {
 
-        const socket = io('ws://localhost:3001');
+        const socket = io('ws://localhost:3005/api');
 
         socket.on('new-demand',function(){
 

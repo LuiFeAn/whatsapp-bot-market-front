@@ -69,7 +69,9 @@ export default function BookletPage({headerTitle}){
 
         setMessageInputModal(false);
 
-        await toast.promise(econoAPI.post('/booklets',form),{
+        await toast.promise(econoAPI.post('/booklets',form,{
+            timeout:0
+        }),{
             success:'Encarte enviado',
             pending:'Enviando encarte...',
             error:'Não foi possível enviar o encarte'

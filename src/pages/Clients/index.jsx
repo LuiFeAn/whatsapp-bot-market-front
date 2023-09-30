@@ -209,6 +209,8 @@ export default function Clients(){
 
         const promise = econoAPI.post('/send-booklets',{
             toUsers: sendBookletList
+        },{
+            timeout:0
         });
 
         await toast.promise(promise,{

@@ -93,17 +93,19 @@ export default function Demand({headerTitle}){
 
     },[demandType,demandDate,currentPage,paginationLimit,clientSearch]);
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const socket = io('ws://localhost:3001');
+        const socket = io('ws://localhost:3005/api');
 
-    //     socket.on('new-demand',async function(){
+        socket.on('new-demand',async function(){
 
-    //         await getDemands();
+            await getDemands();
 
-    //     });
+        });
 
-    // },[]);
+        return () => socket.close();
+
+    },[]);
 
 
     async function changeDemandStatus(demandId,status){
