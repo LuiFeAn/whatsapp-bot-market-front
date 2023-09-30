@@ -10,6 +10,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from './components/App';
 
+import BotStatusProvider from './contexts/BotStatusContext';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     
@@ -17,7 +19,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
         <ToastContainer position={toast.POSITION.BOTTOM_LEFT}/>
 
-        <App/>
+        <BotStatusProvider>
+
+            <App/>
+
+        </BotStatusProvider>
 
       </BrowserRouter>
       

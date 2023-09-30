@@ -16,11 +16,15 @@ import { useState, useEffect } from 'react';
 
 import { socket } from '../../services/socketIO';
 
+import { useContext } from 'react';
+
+import { BotStatusContext } from '../../contexts/BotStatusContext';
+
 export default function App(){
 
-    const [ headerTitle, setHeaderTitle ] = useState('');
+    const { setBotStatus } = useContext(BotStatusContext);
 
-    const [ botStatus, setBotStatus ] = useState(false);
+    const [ headerTitle, setHeaderTitle ] = useState('');
 
     useEffect(() => {
 
@@ -39,7 +43,7 @@ export default function App(){
 
                 <GlobalStyles/>
 
-                <Header botStatus={botStatus} title={headerTitle}/>
+                <Header title={headerTitle}/>
 
                 <S.Container>
 

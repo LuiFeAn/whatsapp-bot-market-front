@@ -15,6 +15,16 @@ export const HeaderContainer = styled.header`
         align-items: center;
         justify-content: center;
         gap:20px;
+
+        p{
+
+            width: 50%;
+            padding:20px; 
+            border-radius:10px;  
+            background: ${({botStatusColor}) => botStatusColor};
+
+        }
+
     }
 
     .page-option{
