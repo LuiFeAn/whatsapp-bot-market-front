@@ -10,29 +10,25 @@ import MainRoutes from '../../routes';
 
 import { ThemeProvider } from 'styled-components';
 
-import { io } from 'socket.io-client';
-
 import { toast } from 'react-toastify';
 
 import { useState, useEffect } from 'react';
+
+import { socket } from '../../services/socketIO';
 
 export default function App(){
 
     const [ headerTitle, setHeaderTitle ] = useState('');
 
+    const [ botStatus, setBotStatus ] = useState(false);
+
     useEffect(() => {
 
-        const socket = io('ws://localhost:3005/api');
+        socket.on('new-demand', () => toast.success(`Você recebeu um novo pedido`,{
+            autoClose:15000
+        }));
 
-        socket.on('new-demand',function(){
-
-            console.log('uaiii');
-
-            toast.success(`Você recebeu um novo pedido`,{
-                autoClose:15000
-            });
-
-        });
+        socket.on('bot-already', () => setBotStatus(true) );
 
     },[]);
 
@@ -43,7 +39,7 @@ export default function App(){
 
                 <GlobalStyles/>
 
-                <Header title={headerTitle}/>
+                <Header botStatus={botStatus} title={headerTitle}/>
 
                 <S.Container>
 

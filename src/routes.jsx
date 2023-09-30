@@ -10,6 +10,8 @@ import Clients from './pages/Clients';
 
 import BookletPage from './pages/Booklets';
 
+import Bot from './pages/Bot';
+
 export default function MainRoutes({headerTitle}){
 
     return (
@@ -24,6 +26,8 @@ export default function MainRoutes({headerTitle}){
             <Route path='/encartes' element={<BookletPage headerTitle={headerTitle}/>}/>
 
             <Route path='/clientes' element={<Clients headerTitle={headerTitle}/>}/>
+
+            <Route path='/bot' element={<Bot headerTitle={headerTitle}/>}/>
 
         </Routes>
     )

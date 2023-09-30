@@ -95,15 +95,15 @@ export default function Demand({headerTitle}){
 
     useEffect(() => {
 
-        const socket = io('ws://localhost:3005/api');
+        // const socket = io('ws://localhost:3005/api');
 
-        socket.on('new-demand',async function(){
+        // socket.on('new-demand',async function(){
 
-            await getDemands();
+        //     await getDemands();
 
-        });
+        // });
 
-        return () => socket.close();
+        // return () => socket.close();
 
     },[]);
 

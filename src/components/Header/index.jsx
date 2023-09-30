@@ -3,12 +3,14 @@ import logo from '../../assets/images/logo.png';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-export default function Header({title}) {
+export default function Header({title, botStatus}) {
 
     const Nav = useNavigate();
     
     return (
         <S.HeaderContainer>
+
+            { botStatus ? <p>Conectado</p> : <p>Desconectado</p> }
 
             <div className='logo-title'>
 
